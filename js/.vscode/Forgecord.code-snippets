@@ -1,0 +1,22 @@
+{
+  "DiscoForge Full Command Snippet": {
+    "prefix": ["cmd", "dxc"],
+    "scope": "javascript",
+    "body": ["const { ApplicationCommandType } = require(\"discord.js\");", "", "/**", " * @type {import(\"@base/baseClient.js\")}", " */", "module.exports = {", "  name: \"${1:commandName}\",", "  description: \"${2:commandDescription}\",", "  cooldown: 10,", "  category: \"${3:general}\",", "  botPermissions: [],", "  userPermissions: [],", "  options: [],", "  type: ApplicationCommandType.ChatInput,", "", "  command: {", "    enabled: true,", "    aliases: [],", "    minArgsCount: 0,", "  },", "", "  slashCommand: {", "    enabled: true,", "  },", "", "  async msgExecute(client, message, args) {", "    try {", "      // Message Command logic goes here", "    } catch (error) {", "      client.logger.error(`Error in command ${this.name}:`, error);", "      await message.reply({ content: 'An error occurred while executing the command.' });", "    }", "  },", "", "  async interactionExecute(client, interaction) {", "    try {", "      // Slash Command logic goes here", "    } catch (error) {", "      client.logger.error(`Error in command ${this.name}:`, error);", "      if (interaction.replied || interaction.deferred) {", "        await interaction.editReply({ content: 'An error occurred while executing the command.' });", "      } else {", "        await interaction.reply({ content: 'An error occurred while executing the command.', ephemeral: true });", "      }", "    }", "  },", "", "  async autocompleteExecute(client, interaction) {", "    try {", "      // Autocomplete logic goes here", "    } catch (error) {", "      client.logger.error(`Error in autocomplete for command ${this.name}:`, error);", "    }", "  },", "};"],
+    "description": "Full DiscoForge Command Snippet using client.logger with try/catch error handling",
+  },
+
+  "DiscoForge BaseEvent Snippet": {
+    "prefix": ["event"],
+    "scope": "javascript",
+    "body": ["const BEV = require('@base/baseEvents');", "/** @type {BEV.BaseEvent<\"${1:eventName}\">} */", "module.exports = {", "  name: \"${1:eventName}\",", "  target: \"${2:client}\",", "  once: ${3:false},", "  async execute(client) {", "    try {", "      ${4:// Event logic goes here}", "    } catch (error) {", "      client.logger.error(`Error in event ${1:eventName}:`, error);", "    }", "  },", "};"],
+    "description": "DiscoForge BaseEvent Template using client.logger with error handling",
+  },
+
+  "DiscoForge Component Snippet": {
+    "prefix": ["component", "action"],
+    "scope": "javascript",
+    "body": ["/**", " * @type {import(\"@base/baseComponent\")}", " */", "module.exports = {", "  name: \"${1:componentName}\",", "  enabled: true,", "  botPermissions: [],", "  userPermissions: [],", "", "  action: async (client, interaction, parts) => {", "    await interaction.deferReply();", "", "    try {", "      ${2:// Component logic goes here}", "    } catch (error) {", "      client.logger.error(`Error in component ${1:componentName}:`, error);", "      await interaction.editReply({", "        content: \"😓 i am sorry, it seems like i am having some issues right now, please try again later.\",", "      });", "    }", "  },", "};"],
+    "description": "DiscoForge Component Template for buttons/selects using client.logger with error handling",
+  },
+}

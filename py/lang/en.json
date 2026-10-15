@@ -1,0 +1,75 @@
+{
+  "langConfig": {
+    "name": "English",
+    "flag": "🇬🇧",
+    "short": "en"
+  },
+  "commands": {
+    "refrish": {
+      "description": "Reload commands, events, and components without restarting the bot",
+      "commands": "Reload commands",
+      "all": "Reload everything"
+    },
+    "help": {
+      "description": "Get help with the bot commands"
+    },
+    "ping": {
+      "description": "Ping the bot and get the current latency"
+    },
+    "botinfo": {
+      "description": "Shows bot statistics"
+    },
+    "lang": {
+      "description": "Change your preferred language"
+    }
+  },
+  "help": {
+    "aliases": "Aliases",
+    "commands": "Commands",
+    "description": "**An advanced Music System with Audio Filtering, a unique Music Request System, and much more!**",
+    "error": "An error occurred while executing the help command: {error}",
+    "home": "Return to the main help menu",
+    "noCommands": "No commands available for this category.",
+    "notYourInteraction": "Not Your Interaction !!",
+    "options": "Options",
+    "selectCategory": "Select a category",
+    "stats": "Stats",
+    "statsValue": "> **:gear: `{commands}` Commands\\n:file_folder: `{guilds}` Guilds\\n⌚️ {uptime} Uptime\\n🏓 `{ping}` Ping\\nMade by [`Nexus Studio`](https://discord.gg/rMr5YdvYvP)**",
+    "viewCategory": "View commands in the {category} category"
+  },
+  "stats": {
+    "arch": "🛠 Arch",
+    "channels": "📁 Channels",
+    "cpu": "⚙ CPU",
+    "cpuUsage": "🖥 CPU Usage",
+    "discordjs": "👾 Discord.JS",
+    "footer": "Powered by {bot}",
+    "memory": "⏳ Memory Usage",
+    "node": "🤖 Node",
+    "ping": "🏓 Ping",
+    "platform": "💻 Platform",
+    "requestedBy": "🙋 Requested By",
+    "servers": "🌍 Servers",
+    "title": "🚀 Bot Live Statistics",
+    "unavailable": "🙄 Unable to fetch bot statistics at the moment.",
+    "uptime": "⌚ Uptime",
+    "users": "👥 Total Users",
+    "version": "📌 Bot Version"
+  },
+  "ping": {
+    "pong": ":ping_pong: **Pong {ping} ms**"
+  },
+  "reload": {
+    "done": "DONE Commands: {commandsLoaded} loaded, {commandsFailed} failed\\nDONE Components: {componentsLoaded} loaded, {componentsFailed} failed\\nDONE Functions: {functionsLoaded} loaded, {functionsFailed} failed",
+    "error": "An error occurred while reloading: {error}"
+  },
+  "lang": {
+    "title": "Language Settings",
+    "description": "Choose the language you want to use for bot responses.",
+    "current": "Current language: {language}",
+    "changed": "Your language has been changed to {language}.",
+    "invalid": "Invalid language. Please choose one of: {languages}.",
+    "choose": "Choose a language",
+    "available": "Available languages"
+  }
+}

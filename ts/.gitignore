@@ -1,0 +1,19 @@
+node_modules/
+.env
+errors/
+dist/
+*.log
+.DS_Store
+
+logs/
+logs/*
+
+# Runtime language preferences
+data/user-languages.json
+
+# Local database files
+data/database.json
+data/database.yml
+data/database.sqlite
+database/database.json
+database/database.sqlite

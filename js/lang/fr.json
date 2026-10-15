@@ -1,0 +1,75 @@
+{
+  "langConfig": {
+    "name": "Français",
+    "flag": "🇫🇷",
+    "short": "fr"
+  },
+  "commands": {
+    "refrish": {
+      "description": "Recharger les commandes, événements et composants sans redémarrer le bot",
+      "commands": "Recharger les commandes",
+      "all": "Tout recharger"
+    },
+    "help": {
+      "description": "Obtenir de l’aide sur les commandes du bot"
+    },
+    "ping": {
+      "description": "Tester la latence du bot"
+    },
+    "botinfo": {
+      "description": "Afficher les statistiques du bot"
+    },
+    "lang": {
+      "description": "Changer votre langue préférée"
+    }
+  },
+  "help": {
+    "aliases": "Alias",
+    "commands": "Commandes",
+    "description": "**Un système musical avancé avec filtres audio, un système de demandes musicales unique et bien plus encore !**",
+    "error": "Une erreur est survenue pendant la commande d’aide : {error}",
+    "home": "Retour au menu d’aide principal",
+    "noCommands": "Aucune commande disponible pour cette catégorie.",
+    "notYourInteraction": "Cette interaction ne vous appartient pas !",
+    "options": "Options",
+    "selectCategory": "Sélectionnez une catégorie",
+    "stats": "Statistiques",
+    "statsValue": "> **:gear: `{commands}` commandes\\n:file_folder: `{guilds}` serveurs\\n⌚️ {uptime} Temps de fonctionnement\\n🏓 `{ping}` Latence\\nDéveloppé par [`Nexus Studio`](https://discord.gg/rMr5YdvYvP)**",
+    "viewCategory": "Voir les commandes de la catégorie {category}"
+  },
+  "stats": {
+    "arch": "🛠 Architecture",
+    "channels": "📁 Salons",
+    "cpu": "⚙ CPU",
+    "cpuUsage": "🖥 Utilisation CPU",
+    "discordjs": "👾 Discord.JS",
+    "footer": "Propulsé par {bot}",
+    "memory": "⏳ Utilisation mémoire",
+    "node": "🤖 Node",
+    "ping": "🏓 Latence",
+    "platform": "💻 Plateforme",
+    "requestedBy": "🙋 Demandé par",
+    "servers": "🌍 Serveurs",
+    "title": "🚀 Statistiques du bot en direct",
+    "unavailable": "🙄 Impossible de récupérer les statistiques du bot pour le moment.",
+    "uptime": "⌚ Temps de fonctionnement",
+    "users": "👥 Utilisateurs totaux",
+    "version": "📌 Version du bot"
+  },
+  "ping": {
+    "pong": ":ping_pong: **Pong {ping} ms**"
+  },
+  "reload": {
+    "done": "COMMANDES : {commandsLoaded} chargées, {commandsFailed} échouées\\nCOMPOSANTS : {componentsLoaded} chargés, {componentsFailed} échoués\\nFONCTIONS : {functionsLoaded} chargées, {functionsFailed} échouées",
+    "error": "Une erreur est survenue lors du rechargement : {error}"
+  },
+  "lang": {
+    "title": "Paramètres de langue",
+    "description": "Choisissez la langue utilisée par les réponses du bot.",
+    "current": "Langue actuelle : {language}",
+    "changed": "Votre langue a été changée en {language}.",
+    "invalid": "Langue invalide. Choisissez parmi : {languages}.",
+    "choose": "Choisissez une langue",
+    "available": "Langues disponibles"
+  }
+}

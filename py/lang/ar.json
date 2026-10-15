@@ -1,0 +1,75 @@
+{
+  "langConfig": {
+    "name": "العربية",
+    "flag": "🇸🇦",
+    "short": "ar"
+  },
+  "commands": {
+    "refrish": {
+      "description": "إعادة تحميل الأوامر والأحداث والمكونات دون إعادة تشغيل البوت",
+      "commands": "إعادة تحميل الأوامر",
+      "all": "إعادة تحميل كل شيء"
+    },
+    "help": {
+      "description": "احصل على المساعدة بشأن أوامر البوت"
+    },
+    "ping": {
+      "description": "اختبر اتصال البوت واعرض زمن الاستجابة"
+    },
+    "botinfo": {
+      "description": "عرض إحصائيات البوت"
+    },
+    "lang": {
+      "description": "تغيير اللغة المفضلة لديك"
+    }
+  },
+  "help": {
+    "aliases": "الاختصارات",
+    "commands": "الأوامر",
+    "description": "**نظام موسيقى متقدم مع فلاتر صوتية ونظام طلبات موسيقية مميز والمزيد!**",
+    "error": "حدث خطأ أثناء تنفيذ أمر المساعدة: {error}",
+    "home": "العودة إلى قائمة المساعدة الرئيسية",
+    "noCommands": "لا توجد أوامر متاحة لهذا التصنيف.",
+    "notYourInteraction": "هذا التفاعل ليس خاصًا بك!",
+    "options": "الخيارات",
+    "selectCategory": "اختر تصنيفًا",
+    "stats": "الإحصائيات",
+    "statsValue": "> **:gear: `{commands}` أمر\\n:file_folder: `{guilds}` سيرفر\\n⌚️ {uptime} مدة التشغيل\\n🏓 `{ping}` استجابة\\nتم التطوير بواسطة [`Nexus Studio`](https://discord.gg/rMr5YdvYvP)**",
+    "viewCategory": "عرض أوامر تصنيف {category}"
+  },
+  "stats": {
+    "arch": "🛠 المعمارية",
+    "channels": "📁 القنوات",
+    "cpu": "⚙ المعالج",
+    "cpuUsage": "🖥 استخدام المعالج",
+    "discordjs": "👾 Discord.JS",
+    "footer": "بواسطة {bot}",
+    "memory": "⏳ استخدام الذاكرة",
+    "node": "🤖 Node",
+    "ping": "🏓 الاستجابة",
+    "platform": "💻 المنصة",
+    "requestedBy": "🙋 طلب بواسطة",
+    "servers": "🌍 السيرفرات",
+    "title": "🚀 إحصائيات البوت المباشرة",
+    "unavailable": "🙄 تعذر جلب إحصائيات البوت حاليًا.",
+    "uptime": "⌚ مدة التشغيل",
+    "users": "👥 إجمالي المستخدمين",
+    "version": "📌 إصدار البوت"
+  },
+  "ping": {
+    "pong": ":ping_pong: **Pong {ping} ms**"
+  },
+  "reload": {
+    "done": "تم تحميل الأوامر: {commandsLoaded}، فشل: {commandsFailed}\\nتم تحميل المكونات: {componentsLoaded}، فشل: {componentsFailed}\\nتم تحميل الدوال: {functionsLoaded}، فشل: {functionsFailed}",
+    "error": "حدث خطأ أثناء إعادة التحميل: {error}"
+  },
+  "lang": {
+    "title": "إعدادات اللغة",
+    "description": "اختر اللغة التي تريد استخدامها في ردود البوت.",
+    "current": "اللغة الحالية: {language}",
+    "changed": "تم تغيير لغتك إلى {language}.",
+    "invalid": "لغة غير صالحة. اختر واحدة من: {languages}.",
+    "choose": "اختر لغة",
+    "available": "اللغات المتاحة"
+  }
+}

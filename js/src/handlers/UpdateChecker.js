@@ -1,0 +1,41 @@
+// src/handlers/UpdateChecker.js
+const pkg = require('../../package.json');
+
+module.exports = class UpdateChecker {
+  static async checkVersionWithResult() {
+    try {
+      const res = await fetch('https://api.github.com/repos/Boda335/forgecord/tags');
+      if (!res.ok) {
+        return { success: false, error: 'Failed to fetch tags' };
+      }
+
+      const json = await res.json();
+      const versions = (Array.isArray(json) ? json : [])
+        .map(tag => {
+          const name = typeof tag?.name === 'string' ? tag.name : '';
+          const match = name.match(/^v?(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
+          return match ? { name, parts: match.slice(1, 4).map(Number) } : null;
+        })
+        .filter(Boolean);
+      if (!versions.length) return { success: false, error: 'No semantic version tags found' };
+      const latestTag = versions.sort((a, b) => {
+        for (let i = 0; i < 3; i += 1) if (a.parts[i] !== b.parts[i]) return b.parts[i] - a.parts[i];
+        return 0;
+      })[0];
+      const latestName = latestTag.name.replace(/^v/, '');
+      const latest = latestTag.parts;
+      const current = pkg.version.replace(/^v/, '').split('.').map(Number);
+
+      const updateAvailable = latest[0] > current[0] || (latest[0] === current[0] && latest[1] > current[1]) || (latest[0] === current[0] && latest[1] === current[1] && latest[2] > current[2]);
+
+      return {
+        success: true,
+        latest: latestName,
+        current: pkg.version,
+        updateAvailable,
+      };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+};

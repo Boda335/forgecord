@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  js:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: js
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm test
+
+  ts:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npx tsc --noEmit
+      - run: npm test
+
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+
+  cli-smoke-test:
+    runs-on: ubuntu-latest
+    needs: [js, ts, python]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm install
+      - name: Scaffold a project for each language and confirm it copies cleanly
+        run: |
+          node bin/create-forgecord.js scaffold-test-js --yes --lang=js --no-install
+          test -f scaffold-test-js/bot.js
+          test -f scaffold-test-js/.env
+
+          node bin/create-forgecord.js scaffold-test-ts --yes --lang=ts --no-install
+          test -f scaffold-test-ts/bot.ts
+          test -f scaffold-test-ts/.env
+
+          node bin/create-forgecord.js scaffold-test-py --yes --lang=py --no-install
+          test -f scaffold-test-py/bot.py
+          test -f scaffold-test-py/.env

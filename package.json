@@ -1,0 +1,41 @@
+{
+  "name": "forgecord",
+  "version": "1.0.0",
+  "description": "Scaffold a new Forgecord Discord bot in JavaScript, TypeScript, or Python",
+  "bin": {
+    "forgecord": "bin/create-forgecord.js"
+  },
+  "files": [
+    "bin",
+    "js",
+    "ts",
+    "py",
+    "dashboard-template",
+    "dashboard-backend-js",
+    "dashboard-backend-ts",
+    "dashboard-backend-py"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "license": "MIT",
+  "keywords": [
+    "discord",
+    "bot",
+    "discord.js",
+    "discord.py",
+    "scaffold",
+    "cli",
+    "generator",
+    "forgecord"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Boda335/forgecord.git"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "chalk": "^6.0.1",
+    "gradient-string": "^3.0.0"
+  }
+}
