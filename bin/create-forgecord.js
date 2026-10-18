@@ -1,4 +1,3 @@
-
 'use strict';
 
 const fs = require('fs');
@@ -59,16 +58,7 @@ const DATABASE_TYPES = {
   mysql: 'MySQL',
 };
 
-const {
-  commandTemplate,
-  eventTemplate,
-  componentTemplate,
-  pluginTemplate,
-  safeIdentifier,
-  slug,
-  runAddGenerator,
-  runDoctor,
-} = require('./lib/generators');
+const { commandTemplate, eventTemplate, componentTemplate, pluginTemplate, safeIdentifier, slug, runAddGenerator, runDoctor } = require('./lib/generators');
 
 const BANNER_LINES = [
   ' ______ ____  _____   _____ ______ _____ ____  _____  _____  ',
@@ -81,11 +71,7 @@ const BANNER_LINES = [
 
 function printBanner() {
   console.log(forgecordGradient.multiline(BANNER_LINES.join('\n')));
-  console.log(
-    chalk.dim(
-      '  Scaffold a Discord bot in JavaScript, TypeScript, or Python.\n',
-    ),
-  );
+  console.log(chalk.dim('  Scaffold a Discord bot in JavaScript, TypeScript, or Python.\n'));
 }
 
 // --- CLI flags -------------------------------------------------------------
@@ -152,19 +138,12 @@ function normalizeMainFileName(input, langKey) {
   const extension = MAIN_FILE_EXTENSIONS[langKey];
   let fileName = String(input || '').trim() || DEFAULT_MAIN_FILES[langKey];
 
-  if (
-    fileName.includes('/') ||
-    fileName.includes('\\') ||
-    fileName === '.' ||
-    fileName === '..'
-  ) {
+  if (fileName.includes('/') || fileName.includes('\\') || fileName === '.' || fileName === '..') {
     throw new Error('Enter a file name only, without a directory path.');
   }
 
   if (!/^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(fileName)) {
-    throw new Error(
-      'Use only letters, numbers, dots, underscores, and hyphens in the main file name.',
-    );
+    throw new Error('Use only letters, numbers, dots, underscores, and hyphens in the main file name.');
   }
 
   const providedExtension = path.extname(fileName).toLowerCase();
@@ -172,9 +151,7 @@ function normalizeMainFileName(input, langKey) {
   if (!providedExtension) {
     fileName += extension;
   } else if (providedExtension !== extension) {
-    throw new Error(
-      `The ${LANGUAGES[langKey].label} main file must end with "${extension}".`,
-    );
+    throw new Error(`The ${LANGUAGES[langKey].label} main file must end with "${extension}".`);
   }
 
   return fileName;
@@ -223,9 +200,7 @@ function configureMainFile(targetDir, langKey, mainFileName) {
   if (langKey === 'ts') {
     const compiledName = `${path.parse(mainFileName).name}.js`;
 
-    replaceInFile('Dockerfile', [
-      ['dist/bot.js', `dist/${compiledName}`],
-    ]);
+    replaceInFile('Dockerfile', [['dist/bot.js', `dist/${compiledName}`]]);
 
     replaceInFile('README.md', [
       ['dist/bot.js', `dist/${compiledName}`],
@@ -235,18 +210,11 @@ function configureMainFile(targetDir, langKey, mainFileName) {
     const tsconfigPath = path.join(targetDir, 'tsconfig.json');
 
     if (fs.existsSync(tsconfigPath)) {
-      const tsconfig = JSON.parse(
-        fs.readFileSync(tsconfigPath, 'utf8'),
-      );
+      const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'));
 
-      tsconfig.include = (tsconfig.include || []).map(item =>
-        item === 'bot.ts' ? mainFileName : item,
-      );
+      tsconfig.include = (tsconfig.include || []).map(item => (item === 'bot.ts' ? mainFileName : item));
 
-      fs.writeFileSync(
-        tsconfigPath,
-        `${JSON.stringify(tsconfig, null, 2)}\n`,
-      );
+      fs.writeFileSync(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
     }
 
     return;
@@ -322,12 +290,7 @@ DASHBOARD_AUTO_BUILD=true
 `;
 }
 
-function buildJsPackageJson({
-  dirName,
-  isTs,
-  wantsDashboard,
-  mainFileName,
-}) {
+function buildJsPackageJson({ dirName, isTs, wantsDashboard, mainFileName }) {
   const dependencies = {
     'discord.js': '^14.21.0',
     chalk: '^4.1.2',
@@ -408,10 +371,7 @@ function buildJsPackageJson({
       ...pkg.scripts,
       'dashboard:dev': 'npm --prefix dashboard run dev',
       'dashboard:build': 'npm --prefix dashboard run build',
-      'dev:all':
-        'npm run dashboard:build && concurrently -k "' +
-        (isTs ? 'npm run dev' : 'npm start') +
-        '" "npm run dashboard:dev"',
+      'dev:all': 'npm run dashboard:build && concurrently -k "' + (isTs ? 'npm run dev' : 'npm start') + '" "npm run dashboard:dev"',
     };
   }
 
@@ -419,14 +379,7 @@ function buildJsPackageJson({
 }
 
 function buildRequirementsTxt(_databaseType, wantsDashboard = false) {
-  const lines = [
-    'discord.py',
-    'kivodb[mongodb,mysql]',
-    'aiohttp',
-    'rich',
-    'python-dotenv',
-    'logtail-python',
-  ];
+  const lines = ['discord.py', 'kivodb[mongodb,mysql]', 'aiohttp', 'rich', 'python-dotenv', 'logtail-python'];
 
   if (wantsDashboard) {
     lines.push('fastapi', 'uvicorn[standard]');
@@ -483,9 +436,7 @@ function tryGitInit(targetDir, clack) {
   });
 
   if (gitCheck.status !== 0) {
-    clack.log.warn(
-      'git not found — skipping git init. Run `git init` yourself later if you want version control.',
-    );
+    clack.log.warn('git not found — skipping git init. Run `git init` yourself later if you want version control.');
     return;
   }
 
@@ -507,17 +458,13 @@ function tryGitInit(targetDir, clack) {
     env: {
       ...process.env,
       GIT_AUTHOR_NAME: process.env.GIT_AUTHOR_NAME || 'Forgecord',
-      GIT_AUTHOR_EMAIL:
-        process.env.GIT_AUTHOR_EMAIL || 'forgecord@example.com',
+      GIT_AUTHOR_EMAIL: process.env.GIT_AUTHOR_EMAIL || 'forgecord@example.com',
       GIT_COMMITTER_NAME: process.env.GIT_COMMITTER_NAME || 'Forgecord',
-      GIT_COMMITTER_EMAIL:
-        process.env.GIT_COMMITTER_EMAIL || 'forgecord@example.com',
+      GIT_COMMITTER_EMAIL: process.env.GIT_COMMITTER_EMAIL || 'forgecord@example.com',
     },
   });
 
-  clack.log.success(
-    'Initialized a git repository with an initial commit.',
-  );
+  clack.log.success('Initialized a git repository with an initial commit.');
 }
 
 /**
@@ -530,54 +477,34 @@ function installDependencies(langChoice, targetDir, clack, wantsDashboard) {
   let result;
 
   if (langChoice.key === 'py') {
-    const venvResult = spawnSync(
-      'python3',
-      ['-m', 'venv', 'venv'],
-      {
-        cwd: targetDir,
-        stdio: 'pipe',
-      },
-    );
+    const venvResult = spawnSync('python3', ['-m', 'venv', 'venv'], {
+      cwd: targetDir,
+      stdio: 'pipe',
+    });
 
     if (venvResult.status !== 0) {
-      spinner.error(
-        'Could not create a virtualenv (is python3 installed?) — skipping dependency install.',
-      );
+      spinner.error('Could not create a virtualenv (is python3 installed?) — skipping dependency install.');
       return false;
     }
 
-    const pipBin =
-      process.platform === 'win32'
-        ? path.join('venv', 'Scripts', 'pip')
-        : path.join('venv', 'bin', 'pip');
+    const pipBin = process.platform === 'win32' ? path.join('venv', 'Scripts', 'pip') : path.join('venv', 'bin', 'pip');
 
-    result = spawnSync(
-      pipBin,
-      ['install', '-r', 'requirements.txt'],
-      {
-        cwd: targetDir,
-        stdio: 'pipe',
-      },
-    );
+    result = spawnSync(pipBin, ['install', '-r', 'requirements.txt'], {
+      cwd: targetDir,
+      stdio: 'pipe',
+    });
   } else {
-    result = spawnSync(
-      'npm',
-      ['install', '--no-audit', '--no-fund'],
-      {
-        cwd: targetDir,
-        stdio: 'pipe',
-        shell: process.platform === 'win32',
-      },
-    );
+    result = spawnSync('npm', ['install', '--no-audit', '--no-fund'], {
+      cwd: targetDir,
+      stdio: 'pipe',
+      shell: process.platform === 'win32',
+    });
   }
 
   if (!result || result.status !== 0) {
-    spinner.error(
-      'Error installing packages — you can run the install command yourself later.',
-    );
+    spinner.error('Error installing packages — you can run the install command yourself later.');
 
-    const output =
-      result && (result.stderr?.toString() || result.stdout?.toString());
+    const output = result && (result.stderr?.toString() || result.stdout?.toString());
 
     if (output) {
       process.stderr.write(`${chalk.dim(output.trim())}\n`);
@@ -589,23 +516,16 @@ function installDependencies(langChoice, targetDir, clack, wantsDashboard) {
   if (wantsDashboard) {
     spinner.message('Installing dashboard packages');
 
-    result = spawnSync(
-      'npm',
-      ['install', '--no-audit', '--no-fund'],
-      {
-        cwd: path.join(targetDir, 'dashboard'),
-        stdio: 'pipe',
-        shell: process.platform === 'win32',
-      },
-    );
+    result = spawnSync('npm', ['install', '--no-audit', '--no-fund'], {
+      cwd: path.join(targetDir, 'dashboard'),
+      stdio: 'pipe',
+      shell: process.platform === 'win32',
+    });
 
     if (!result || result.status !== 0) {
-      spinner.error(
-        'Dashboard packages failed to install — run `cd dashboard && npm install` later.',
-      );
+      spinner.error('Dashboard packages failed to install — run `cd dashboard && npm install` later.');
 
-      const output =
-        result && (result.stderr?.toString() || result.stdout?.toString());
+      const output = result && (result.stderr?.toString() || result.stdout?.toString());
 
       if (output) {
         process.stderr.write(`${chalk.dim(output.trim())}\n`);
@@ -619,62 +539,22 @@ function installDependencies(langChoice, targetDir, clack, wantsDashboard) {
   return true;
 }
 
-function printSummary(
-  clack,
-  langChoice,
-  targetArg,
-  installed,
-  databaseType,
-  wantsDashboard,
-  mainFileName,
-) {
+function printSummary(clack, langChoice, targetArg, installed, databaseType, wantsDashboard, mainFileName) {
   const runCmd = {
     js: 'npm start',
     ts: 'npm run dev',
-    py:
-      process.platform === 'win32'
-        ? `venv\\Scripts\\python ${mainFileName}`
-        : `venv/bin/python ${mainFileName}`,
+    py: process.platform === 'win32' ? `venv\\Scripts\\python ${mainFileName}` : `venv/bin/python ${mainFileName}`,
   }[langChoice.key];
 
   const installCmd = {
     js: 'npm install',
     ts: 'npm install',
-    py:
-      process.platform === 'win32'
-        ? 'python -m venv venv && venv\\Scripts\\pip install -r requirements.txt'
-        : 'python -m venv venv && venv/bin/pip install -r requirements.txt',
+    py: process.platform === 'win32' ? 'python -m venv venv && venv\\Scripts\\pip install -r requirements.txt' : 'python -m venv venv && venv/bin/pip install -r requirements.txt',
   }[langChoice.key];
 
-  const configFile =
-    langChoice.key === 'py'
-      ? 'settings/config.py'
-      : `settings/config.${langChoice.key}`;
+  const configFile = langChoice.key === 'py' ? 'settings/config.py' : `settings/config.${langChoice.key}`;
 
-  const lines = [
-    `${chalk.cyan('cd')} ${targetArg}`,
-    ...(installed
-      ? []
-      : [
-          `${chalk.cyan(installCmd)}  ${chalk.dim('install dependencies')}`,
-        ]),
-    `${chalk.cyan(runCmd)}  ${chalk.dim('start your bot')}`,
-    ...(wantsDashboard
-      ? langChoice.key === 'py'
-        ? [
-            `${chalk.cyan('python dev.py')}  ${chalk.dim('start bot + dashboard together')}`,
-          ]
-        : [
-            `${chalk.cyan('npm run dev:all')}  ${chalk.dim('start bot + dashboard together')}`,
-            `${chalk.cyan('npm run dashboard:build')}  ${chalk.dim('build the dashboard for production')}`,
-          ]
-      : []),
-    '',
-    `Edit ${chalk.yellow('.env')} with your bot token and other app secrets`,
-    `Database driver: ${chalk.yellow(databaseType)}`,
-    `Adjust ${chalk.yellow(configFile)} for embed colors, links, owners`,
-    `Or run with Docker: ${chalk.cyan('docker compose up --build')}`,
-  ];
+  const lines = [`${chalk.cyan('cd')} ${targetArg}`, ...(installed ? [] : [`${chalk.cyan(installCmd)}  ${chalk.dim('install dependencies')}`]), `${chalk.cyan(runCmd)}  ${chalk.dim('start your bot')}`, ...(wantsDashboard ? (langChoice.key === 'py' ? [`${chalk.cyan('python dev.py')}  ${chalk.dim('start bot + dashboard together')}`] : [`${chalk.cyan('npm run dev:all')}  ${chalk.dim('start bot + dashboard together')}`, `${chalk.cyan('npm run dashboard:build')}  ${chalk.dim('build the dashboard for production')}`]) : []), '', `Edit ${chalk.yellow('.env')} with your bot token and other app secrets`, `Database driver: ${chalk.yellow(databaseType)}`, `Adjust ${chalk.yellow(configFile)} for embed colors, links, owners`, `Or run with Docker: ${chalk.cyan('docker compose up --build')}`];
 
   clack.note(lines.join('\n'), 'Next steps');
   clack.outro(chalk.green('Happy hacking! 🎉'));
@@ -687,26 +567,16 @@ function printHelp(isBareInvocation = false) {
 
   if (isBareInvocation) {
     console.log(chalk.white('\nWelcome to Forgecord!'));
-    console.log(
-      `Run ${chalk.cyan('forgecord --help')} or ${chalk.cyan('forgecord -h')} to see available commands.`,
-    );
-    console.log(
-      `Run ${chalk.cyan('forgecord <project-name>')} to create a new bot.\n`,
-    );
+    console.log(`Run ${chalk.cyan('forgecord --help')} or ${chalk.cyan('forgecord -h')} to see available commands.`);
+    console.log(`Run ${chalk.cyan('forgecord <project-name>')} to create a new bot.\n`);
     return;
   }
 
-  console.log(
-    chalk.dim(
-      'Create and manage Discord bot projects in JavaScript, TypeScript, or Python.\n',
-    ),
-  );
+  console.log(chalk.dim('Create and manage Discord bot projects in JavaScript, TypeScript, or Python.\n'));
 
   console.log(chalk.bold('Usage'));
   console.log('  forgecord [project-name] [options]');
-  console.log(
-    '  forgecord add <command|event|plugin|component> [--lang=js|ts|py]',
-  );
+  console.log('  forgecord add <command|event|plugin|component> [--lang=js|ts|py]');
   console.log('  forgecord doctor [--lang=js|ts|py]');
   console.log('  forgecord --help | -h | -help\n');
 
@@ -768,12 +638,7 @@ async function main() {
   const rawArgs = process.argv.slice(2);
   const subcommand = rawArgs[0];
 
-  const helpFlags = new Set([
-    '-h',
-    '--help',
-    '-help',
-    'help',
-  ]);
+  const helpFlags = new Set(['-h', '--help', '-help', 'help']);
 
   const helpRequested = rawArgs.some(arg => helpFlags.has(arg));
 
@@ -789,9 +654,7 @@ async function main() {
   // show the short welcome screen.
   //
   // npm_execpath is set by npm/npx, allowing us to distinguish the invocation.
-  const invokedThroughNpm =
-    Boolean(process.env.npm_execpath) ||
-    Boolean(process.env.npm_command);
+  const invokedThroughNpm = Boolean(process.env.npm_execpath) || Boolean(process.env.npm_command);
 
   if (rawArgs.length === 0 && !invokedThroughNpm) {
     setupPlainChalk();
@@ -813,9 +676,7 @@ async function main() {
     const kind = rawArgs[1];
 
     if (!['command', 'event', 'plugin', 'component'].includes(kind)) {
-      throw new Error(
-        'Usage: forgecord add <command|event|plugin|component> [--lang=js|ts|py]',
-      );
+      throw new Error('Usage: forgecord add <command|event|plugin|component> [--lang=js|ts|py]');
     }
 
     await runAddGenerator(clack, kind, rawArgs.slice(2), chalk);
@@ -832,17 +693,9 @@ async function main() {
   // An interactive flow requires a real TTY. In CI or piped environments,
   // proceed with defaults instead of waiting for interactive input.
   if (!flags.yes && !process.stdin.isTTY) {
-    console.log(
-      chalk.yellow(
-        'Non-interactive terminal detected — proceeding with --yes defaults.',
-      ),
-    );
+    console.log(chalk.yellow('Non-interactive terminal detected — proceeding with --yes defaults.'));
 
-    console.log(
-      chalk.dim(
-        'Pass a directory, --lang, --database, --entry, --no-git, and --no-install for scripted runs.\n',
-      ),
-    );
+    console.log(chalk.dim('Pass a directory, --lang, --database, --entry, --no-git, and --no-install for scripted runs.\n'));
 
     flags.yes = true;
   }
@@ -853,10 +706,7 @@ async function main() {
 
   // --- language ------------------------------------------------------------
 
-  let langKey =
-    flags.lang && LANG_ALIASES[flags.lang]
-      ? LANG_ALIASES[flags.lang]
-      : null;
+  let langKey = flags.lang && LANG_ALIASES[flags.lang] ? LANG_ALIASES[flags.lang] : null;
 
   if (!langKey && flags.yes) {
     langKey = 'js';
@@ -932,20 +782,13 @@ async function main() {
     requestedMainFile = entryAnswer;
   }
 
-  const mainFileName = normalizeMainFileName(
-    requestedMainFile,
-    langKey,
-  );
+  const mainFileName = normalizeMainFileName(requestedMainFile, langKey);
 
   const targetDir = path.resolve(process.cwd(), targetArg);
 
   if (targetArg !== '.' && dirHasFiles(targetDir)) {
     if (flags.yes) {
-      console.log(
-        chalk.red(
-          `\n"${targetArg}" already exists and isn't empty — refusing to overwrite in --yes mode.`,
-        ),
-      );
+      console.log(chalk.red(`\n"${targetArg}" already exists and isn't empty — refusing to overwrite in --yes mode.`));
       return;
     }
 
@@ -962,14 +805,10 @@ async function main() {
 
   // --- optional questions --------------------------------------------------
 
-  const selectedDatabaseType = flags.database
-    ? DATABASE_TYPES[flags.database]
-    : null;
+  const selectedDatabaseType = flags.database ? DATABASE_TYPES[flags.database] : null;
 
   if (flags.database && !selectedDatabaseType) {
-    throw new Error(
-      `Unsupported database type "${flags.database}". Choose JSON, Sqlite, MONGODB, or MySQL.`,
-    );
+    throw new Error(`Unsupported database type "${flags.database}". Choose JSON, Sqlite, MONGODB, or MySQL.`);
   }
 
   const answers = {
@@ -1030,9 +869,7 @@ async function main() {
 
     answers.databaseType = databaseType;
 
-    clack.log.step(
-      `A few optional questions. The bot token and app settings go in .env; database settings live in ${mainFileName}.`,
-    );
+    clack.log.step(`A few optional questions. The bot token and app settings go in .env; database settings live in ${mainFileName}.`);
 
     const token = await clack.text({
       message: 'Bot Token',
@@ -1075,25 +912,16 @@ async function main() {
 
   const sourceDir = path.join(TEMPLATES_ROOT, langChoice.key);
 
-  const skip =
-    langChoice.key === 'py'
-      ? new Set(['requirements.txt'])
-      : new Set(['package.json', 'package-lock.json']);
+  const skip = langChoice.key === 'py' ? new Set(['requirements.txt']) : new Set(['package.json', 'package-lock.json']);
 
   copyDir(sourceDir, targetDir, skip);
 
   if (answers.wantsDashboard) {
-    copyDir(
-      path.join(TEMPLATES_ROOT, 'dashboard-template'),
-      path.join(targetDir, 'dashboard'),
-    );
+    copyDir(path.join(TEMPLATES_ROOT, 'dashboard-template'), path.join(targetDir, 'dashboard'));
 
     const backendDir = path.join(targetDir, 'src', 'dashboard');
 
-    copyDir(
-      path.join(TEMPLATES_ROOT, `dashboard-backend-${langChoice.key}`),
-      backendDir,
-    );
+    copyDir(path.join(TEMPLATES_ROOT, `dashboard-backend-${langChoice.key}`), backendDir);
   }
 
   const dirName = path.basename(targetDir);
@@ -1103,27 +931,12 @@ async function main() {
   const botConfigFile = path.join(targetDir, mainFileName);
   const botSource = fs.readFileSync(botConfigFile, 'utf8');
 
-  const selectedSource =
-    langChoice.key === 'py'
-      ? botSource.replace(
-          /(["']database_type["']\s*:\s*)(["'])[^"']*\2(?=,\s*#\s*@forgecord-database-type)/,
-          `$1"${answers.databaseType}"`,
-        )
-      : botSource.replace(
-          /(database_type:\s*)(['"])[^'"]*\2(?=,\s*\/\/\s*@forgecord-database-type)/,
-          `$1$2${answers.databaseType}$2`,
-        );
+  const selectedSource = langChoice.key === 'py' ? botSource.replace(/(["']database_type["']\s*:\s*)(["'])[^"']*\2(?=,\s*#\s*@forgecord-database-type)/, `$1"${answers.databaseType}"`) : botSource.replace(/(database_type:\s*)(['"])[^'"]*\2(?=,\s*\/\/\s*@forgecord-database-type)/, `$1$2${answers.databaseType}$2`);
 
   fs.writeFileSync(botConfigFile, selectedSource);
 
   if (langChoice.key === 'py') {
-    fs.writeFileSync(
-      path.join(targetDir, 'requirements.txt'),
-      buildRequirementsTxt(
-        answers.databaseType,
-        answers.wantsDashboard,
-      ),
-    );
+    fs.writeFileSync(path.join(targetDir, 'requirements.txt'), buildRequirementsTxt(answers.databaseType, answers.wantsDashboard));
   } else {
     const pkg = buildJsPackageJson({
       dirName,
@@ -1132,25 +945,14 @@ async function main() {
       mainFileName,
     });
 
-    fs.writeFileSync(
-      path.join(targetDir, 'package.json'),
-      `${JSON.stringify(pkg, null, 2)}\n`,
-    );
+    fs.writeFileSync(path.join(targetDir, 'package.json'), `${JSON.stringify(pkg, null, 2)}\n`);
   }
 
-  fs.writeFileSync(
-    path.join(targetDir, '.env'),
-    buildEnvContent(answers),
-  );
+  fs.writeFileSync(path.join(targetDir, '.env'), buildEnvContent(answers));
 
-  fs.writeFileSync(
-    path.join(targetDir, 'docker-compose.yml'),
-    buildDockerCompose(answers.databaseType),
-  );
+  fs.writeFileSync(path.join(targetDir, 'docker-compose.yml'), buildDockerCompose(answers.databaseType));
 
-  clack.log.success(
-    `Created .env and configured ${answers.databaseType} in ${mainFileName}.`,
-  );
+  clack.log.success(`Created .env and configured ${answers.databaseType} in ${mainFileName}.`);
 
   if (!flags.noGit) {
     tryGitInit(targetDir, clack);
@@ -1159,23 +961,10 @@ async function main() {
   let installed = false;
 
   if (shouldInstall) {
-    installed = installDependencies(
-      langChoice,
-      targetDir,
-      clack,
-      answers.wantsDashboard,
-    );
+    installed = installDependencies(langChoice, targetDir, clack, answers.wantsDashboard);
   }
 
-  printSummary(
-    clack,
-    langChoice,
-    targetArg,
-    installed,
-    answers.databaseType,
-    answers.wantsDashboard,
-    mainFileName,
-  );
+  printSummary(clack, langChoice, targetArg, installed, answers.databaseType, answers.wantsDashboard, mainFileName);
 }
 
 if (require.main === module) {
