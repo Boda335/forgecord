@@ -45,7 +45,7 @@ const messageCreateEvent: BaseEvent<'messageCreate'> = {
           .setThumbnail(message.guild.iconURL())
           .setColor(client.config.embed.color)
           .setDescription(
-            `**My prefix for \`${message.guild.name}\` is \`${prefix}\`**\n**You can join our [Support Server](${client.config.links.DiscordServer}) for more help!**\n**This Bot is made by [\`Boda3350\`](${client.config.links.Devloper}) [\`neXus-Team\`](${client.config.links.DiscordServer})**`
+            `**My prefix for \`${message.guild.name}\` is \`${prefix}\`**\n**You can join our [Support Server](${client.config.links.DiscordServer}) for more help!**\n**This bot is powered by Forgecord**`
           );
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
           new ButtonBuilder().setURL(client.config.links.DiscordServer).setLabel('Support Server').setStyle(ButtonStyle.Link),

@@ -18,6 +18,7 @@ module.exports = {
       await client.errorHandler.safeExecute(() => cmd.autocompleteExecute(client, interaction), {
         kind: 'autocomplete',
         name: cmd.name,
+        interaction,
       });
       return;
     }
@@ -38,6 +39,9 @@ module.exports = {
       }
 
       if (cmd) {
+        if (cmd.category === 'OWNER' && !client.config.Owners.includes(interaction.user.id)) {
+          return client.embed(interaction, '**This command is restricted to configured bot owners.**');
+        }
         // dmonly=true / userInstall=true -> command must be run in a DM with the bot, never in a guild
         // both false/undefined -> command must be run in a guild, never in a DM
         const isDmOnly = cmd.dmonly || cmd.userInstall;
@@ -63,7 +67,7 @@ module.exports = {
               ephemeral: true,
             });
           }
-        } else if (cmd.category === 'OWNER' && !client.config.Owners.includes(interaction.user.id)) {
+        } else if (false) {
           return interaction.reply({
             embeds: [new EmbedBuilder().setColor(client.config.embed.errorcolor).setDescription(':rolling_eyes: **This command is for the bot owner only**')],
           });

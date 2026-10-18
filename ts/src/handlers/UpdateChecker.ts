@@ -2,6 +2,7 @@ import type { VersionCheckResult } from '../types/update';
 export type { VersionCheckResult } from '../types/update';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require('../../package.json');
+const currentVersion = process.env.FORGECORD_VERSION || pkg.forgecordVersion || pkg.version;
 
 export class UpdateChecker {
   static async checkVersionWithResult(): Promise<VersionCheckResult> {
@@ -26,7 +27,7 @@ export class UpdateChecker {
       })[0];
       const latestName = latestTag.name.replace(/^v/, '');
       const latest = latestTag.parts;
-      const current = String(pkg.version).replace(/^v/, '').split('.').map(Number);
+      const current = String(currentVersion).replace(/^v/, '').split('.').map(Number);
 
       const updateAvailable =
         latest[0] > current[0] ||
@@ -36,7 +37,7 @@ export class UpdateChecker {
       return {
         success: true,
         latest: latestName,
-        current: pkg.version,
+        current: currentVersion,
         updateAvailable,
       };
     } catch (err) {

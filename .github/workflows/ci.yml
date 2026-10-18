@@ -8,7 +8,12 @@ on:
 
 jobs:
   js:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['20.19.0', '22', '24']
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: js
@@ -16,8 +21,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: npm install
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: js/package-lock.json
+      - run: npm ci
       - run: npm test
 
   ts:
@@ -29,12 +36,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - run: npm install
       - run: npx tsc --noEmit
       - run: npm test
 
   python:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.13']
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,7 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements-dev.txt
       - run: python -m pytest -q
 
@@ -54,19 +65,21 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm install
-      - name: Scaffold a project for each language and confirm it copies cleanly
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Scaffold projects and verify optional flags
         run: |
-          node bin/create-forgecord.js scaffold-test-js --yes --lang=js --no-install
+          node bin/create-forgecord.js scaffold-test-js --yes --lang=js --no-install --dashboard --database=sqlite
           test -f scaffold-test-js/bot.js
           test -f scaffold-test-js/.env
-
-          node bin/create-forgecord.js scaffold-test-ts --yes --lang=ts --no-install
+          test -f scaffold-test-js/dashboard/package.json
+          node -e "const p=require('./scaffold-test-js/package.json'); if (!p.dependencies['good.db']) process.exit(1)"
+          cd scaffold-test-js && npm test
+          cd ..
+          node bin/create-forgecord.js scaffold-test-ts --yes --lang=ts --no-install --dashboard --database=json
           test -f scaffold-test-ts/bot.ts
           test -f scaffold-test-ts/.env
-
-          node bin/create-forgecord.js scaffold-test-py --yes --lang=py --no-install
+          node bin/create-forgecord.js scaffold-test-py --yes --lang=py --no-install --database=json
           test -f scaffold-test-py/bot.py
           test -f scaffold-test-py/.env

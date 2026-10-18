@@ -1,3 +1,16 @@
+## [1.1.0] - 2026-10-19
+
+### Added
+- Interactive `forgecord add command|event|plugin|component` generators for JavaScript, TypeScript, and Python.
+- Command prompts for name, optional description, cooldown in minutes, selectable/custom category, prefix-command enablement, and slash-command enablement.
+- Event generator with a default `client` target and a `once` toggle.
+- `forgecord doctor` local configuration checks.
+- Documentation for post-scaffold generators and local diagnostics.
+
+### Changed
+- CLI dynamically imports ESM-only `chalk` and `gradient-string` while retaining the existing package dependency versions.
+- CLI minimum Node version is documented as 20.19.0 to match the ESM dependency requirements.
+
 # Changelog
 
 All notable changes to this project are documented here. Format follows

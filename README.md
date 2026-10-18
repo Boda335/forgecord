@@ -181,7 +181,7 @@ The dashboard starts at `/` with the public landing page. **Sign in with Discord
 
 ## Publishing to npm
 
-This package isn't published yet — that step needs your own npm account:
+This package is published as the Forgecord CLI package — that step needs your own npm account:
 
 ```bash
 npm login                 # one-time, needs an npmjs.com account
@@ -195,7 +195,7 @@ are still runnable via `npx @your-npm-username/forgecord`.
 
 **Before publishing, also update:**
 
-- `package.json` → `"repository"` (currently a `YOUR_GITHUB_USERNAME/forgecord` placeholder)
+- `package.json` → `"repository"` (currently a `Boda335/forgecord` placeholder)
 - Each template's `src/handlers/UpdateChecker.*` / `update_checker.py` → the
   same placeholder, used for the "new version available" check on startup
 - Each template's `LICENSE` → the copyright name
@@ -234,3 +234,19 @@ No — Forgecord is an independent scaffolding tool built on top of them.
 
 MIT — see [`LICENSE`](LICENSE). Each generated template ships its own copy;
 update the copyright name before publishing your bot.
+
+## Managing a generated project
+
+Run these commands from the Forgecord repository, or from a generated project folder. Generators support JavaScript, TypeScript, and Python.
+
+```bash
+forgecord add command
+forgecord add event
+forgecord add plugin
+forgecord add component
+forgecord doctor
+```
+
+When running from the Forgecord repository, pass `--lang=js`, `--lang=ts`, or `--lang=py` to select the template. From a generated project, Forgecord detects the current project. Command generation asks for a name, description, cooldown in minutes, category, and whether prefix and slash commands are enabled. Known categories are selectable, with a custom-category option. Handler functions are included as commented examples so they can be enabled when implemented. Event generation defaults to the `client` target and asks whether the listener should run once.
+
+`forgecord doctor` performs local configuration checks only; it does not send your token to any service or verify live Discord connectivity.

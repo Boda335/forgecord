@@ -72,6 +72,17 @@ class ErrorHandler {
       const label = context.name ? `${context.kind || 'handler'} "${context.name}"` : context.kind || 'handler';
       this.report(`Error in ${label}: ${err.message}${known ? '' : `\n${err.stack}`}`, context);
       this.client.hooks?.emit('commandError', { error: err, context });
+      const interaction = context.interaction;
+      if (interaction && !interaction.replied && !interaction.deferred) {
+        try {
+          await interaction.reply({
+            content: 'Something went wrong while processing your request. Please try again later.',
+            flags: require('discord.js').MessageFlags.Ephemeral,
+          });
+        } catch (replyError) {
+          Logger.warn('Could not send the interaction error response:', replyError.message);
+        }
+      }
       return undefined;
     }
   }

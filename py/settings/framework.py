@@ -13,7 +13,7 @@ PRESENCE: dict[str, object] = {
     "names": [
         "discord.gg/9cfgTktxHm",
         "Made by Nexus Studio Team",
-        "Made by Boda3350",
+        "Made with Forgecord",
         "Powered by Forgecord",
         "discord.gg/9cfgTktxHm",
     ],

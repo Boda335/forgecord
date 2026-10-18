@@ -11,7 +11,7 @@ import os
 TOKEN = os.getenv("TOKEN", "BOT_TOKEN")
 PREFIX = os.getenv("PREFIX", "BOT_PREFIX")
 ID = os.getenv("ID", "CLIENT_ID")
-REMEMBER_ENCRYPTION_KEY = os.getenv("REMEMBER_ENCRYPTION_KEY", "your_encryption_key_here")
+REMEMBER_ENCRYPTION_KEY = os.getenv("REMEMBER_ENCRYPTION_KEY", "")
 NODE_ENV = os.getenv("NODE_ENV", "development")
 LOGTAIL_ENABLE = os.getenv("LOGTAIL_ENABLE", "false").lower() == "true"
 LOGTAIL_SOURCE_TOKEN = os.getenv("LOGTAIL_SOURCE_TOKEN", "")
@@ -20,9 +20,9 @@ DASHBOARD_ENABLED = os.getenv("DASHBOARD_ENABLED", "false").lower() == "true"
 DASHBOARD_PORT = int(os.getenv("DASHBOARD_PORT", "3000"))
 DASHBOARD_HOST = os.getenv("DASHBOARD_HOST", "127.0.0.1")
 
-Owners = ["OWNER_ID", "OWNER_ID2", "OWNER_ID3"]
-Dev = "[Boda3350](https://discord.com/users/1139143053387509840)"
-DevTeam = "[Nexus Studio Team](https://discord.gg/9cfgTktxHm)"
+Owners = [item.strip() for item in os.getenv('OWNER_IDS', '').split(',') if item.strip().isdigit() and 17 <= len(item.strip()) <= 20]
+Dev = f"[Bot Developer]({os.getenv('DEVELOPER_URL')})" if os.getenv("DEVELOPER_URL") else "Bot Developer"
+DevTeam = f"[Development Team]({os.getenv('SUPPORT_SERVER_URL')})" if os.getenv("SUPPORT_SERVER_URL") else "Development Team"
 
 embed = {
     "color": 0x9F4015,
@@ -43,10 +43,10 @@ emoji = {
 }
 
 links = {
-    "store": "https://nexshop.qzz.io/",
+    "store": os.getenv("STORE_URL", ""),
     "inviteURL": "https://discord.com/api/oauth2/authorize?client_id=BOTID&permissions=6508997968&scope=bot%20applications.commands",
-    "DiscordServer": "https://discord.gg/9cfgTktxHm",
-    "Devloper": "https://discord.com/users/1139143053387509840",
+    "DiscordServer": os.getenv("SUPPORT_SERVER_URL", ""),
+    "Devloper": os.getenv("DEVELOPER_URL", ""),
 }
 
 options = {
@@ -57,7 +57,7 @@ options = {
 
 slash = {
     "global": True,
-    "guildIDS": ["1344065394368839701"],
+    "guildIDS": [item.strip() for item in os.getenv("SLASH_GUILD_IDS", "").split(",") if item.strip().isdigit() and 17 <= len(item.strip()) <= 20],
 }
 
 # Backward-compatible aliases for older Forgecord Python projects.

@@ -4,3 +4,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    volumes:
+      - ./database:/app/database
+    init: true

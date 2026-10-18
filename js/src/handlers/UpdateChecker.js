@@ -1,5 +1,6 @@
 // src/handlers/UpdateChecker.js
 const pkg = require('../../package.json');
+const currentVersion = process.env.FORGECORD_VERSION || pkg.forgecordVersion || pkg.version;
 
 module.exports = class UpdateChecker {
   static async checkVersionWithResult() {
@@ -24,14 +25,14 @@ module.exports = class UpdateChecker {
       })[0];
       const latestName = latestTag.name.replace(/^v/, '');
       const latest = latestTag.parts;
-      const current = pkg.version.replace(/^v/, '').split('.').map(Number);
+      const current = currentVersion.replace(/^v/, '').split('.').map(Number);
 
       const updateAvailable = latest[0] > current[0] || (latest[0] === current[0] && latest[1] > current[1]) || (latest[0] === current[0] && latest[1] === current[1] && latest[2] > current[2]);
 
       return {
         success: true,
         latest: latestName,
-        current: pkg.version,
+        current: currentVersion,
         updateAvailable,
       };
     } catch (err) {

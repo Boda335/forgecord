@@ -15,8 +15,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "Node"
+    "declaration": false
   },
   "include": [
     "bot.ts",

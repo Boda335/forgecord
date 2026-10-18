@@ -11,7 +11,7 @@ module.exports = {
     names: [
       'https://discord.gg/9cfgTktxHm',
       `Made by Nexus Studio Team`,
-      `Made by Boda3350`,
+      `Made with Forgecord`,
       `Powered by Forgecord`,
       'discord.gg/9cfgTktxHm',
     ], // The activities the bot will change between (You can put multiple activities in an array)

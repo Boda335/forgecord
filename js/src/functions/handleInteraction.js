@@ -21,18 +21,18 @@ async function handleInteraction(client, interaction, parts) {
 
   const segments = parts || interaction.customId.split('_');
 
-  const handler = client.ComponentsAction.get(interaction.customId) || client.ComponentsAction.find(h => h.customId && h.customId === interaction.customId) || client.ComponentsAction.find(h => h.name && h.name.startsWith(segments[0]));
+  const handler = client.ComponentsAction.get(interaction.customId) || client.ComponentsAction.find(h => h.customId && h.customId === interaction.customId) || null;
 
   if (!handler || handler.enabled === false) return;
 
-  if (handler.userPermissions?.length && !interaction.member.permissions.has(handler.userPermissions)) {
+  if (handler.userPermissions?.length && (!interaction.inGuild() || !interaction.memberPermissions?.has(handler.userPermissions))) {
     return interaction.reply({
       content: `🚫 You need \`${handler.userPermissions.join(', ')}\` to use this interaction.`,
       ephemeral: true,
     });
   }
 
-  if (handler.botPermissions?.length && !interaction.guild.members.me.permissions.has(handler.botPermissions)) {
+  if (handler.botPermissions?.length && (!interaction.guild || !interaction.guild.members.me?.permissions.has(handler.botPermissions))) {
     return interaction.reply({
       content: `🤖 I need \`${handler.botPermissions.join(', ')}\` to perform this action.`,
       ephemeral: true,
@@ -42,6 +42,7 @@ async function handleInteraction(client, interaction, parts) {
   await client.errorHandler.safeExecute(() => handler.action(client, interaction, segments), {
     kind: 'component',
     name: handler.name,
+    interaction,
   });
 }
 

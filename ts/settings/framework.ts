@@ -1,20 +1,4 @@
-export type PresenceActivityType = 'Playing' | 'Watching' | 'Listening' | 'Competing' | 'Custom' | 'Streaming';
-export type PresenceStatus = 'online' | 'idle' | 'dnd' | 'invisible';
-
-export interface ForgecordSettings {
-  errorLogging: {
-    enabled: boolean;
-    errorLogs: string;
-  };
-  presence: {
-    enabled: boolean;
-    status: PresenceStatus;
-    interval: number;
-    type: PresenceActivityType;
-    names: string[];
-    streamingUrl?: string;
-  };
-}
+import { ForgecordSettings } from '../src/types/framework';
 
 const settings: ForgecordSettings = {
   errorLogging: {
@@ -29,7 +13,7 @@ const settings: ForgecordSettings = {
     names: [
       'https://discord.gg/9cfgTktxHm',
       'Made by Nexus Studio Team',
-      'Made by Boda3350',
+      'Made with Forgecord',
       'Powered by Forgecord',
       'discord.gg/9cfgTktxHm',
     ],

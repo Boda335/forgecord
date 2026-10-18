@@ -7,22 +7,22 @@ const ms = require('ms');
  * @type {import("@base/baseCommand")}
  */
 module.exports = {
-  name: 'refrish',
+  name: 'reload',
   description: 'Reload commands, events, and components without restarting the bot',
   cooldown: ms('10s'),
   category: 'OWNER',
-  botPermissions: ['ManageGuild', 'ViewAuditLog'],
-  userPermissions: ['ManageChannels', 'ViewAuditLog'],
+  botPermissions: [],
+  userPermissions: [],
   type: ApplicationCommandType.ChatInput,
   options: [
     {
       name: 'commands',
-      description: 'the target member',
+      description: 'Reload all commands and components',
       type: ApplicationCommandOptionType.SubcommandGroup,
       options: [
         {
           name: 'all',
-          description: 'refish commands',
+          description: 'Reload all handlers',
           type: ApplicationCommandOptionType.Subcommand,
         },
       ],
@@ -30,7 +30,7 @@ module.exports = {
   ],
   command: {
     enabled: true,
-    aliases: ['rl', 're'],
+    aliases: ['refrish', 'rl', 're'],
     minArgsCount: 0,
   },
   slashCommand: {

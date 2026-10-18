@@ -53,10 +53,35 @@ export function createDashboardServer(bot: DashboardBot | null = null): Express 
 
   const dashboardReady = ensureDashboardBuild();
   const oauthStates = new Map<string, number>();
+  const OAUTH_STATE_COOKIE = 'forgecord_oauth_state';
+  const requestBuckets = new Map();
+  const cleanupTimer = setInterval(() => {
+    const now = Date.now();
+    for (const [key, expiry] of oauthStates) if (expiry <= now) oauthStates.delete(key);
+    for (const [key, session] of sessions) if (session.expiresAt <= now) sessions.delete(key);
+    for (const [key, bucket] of requestBuckets) if (bucket.resetAt <= now) requestBuckets.delete(key);
+  }, 60_000);
+  cleanupTimer.unref?.();
+
 
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
-  app.use(express.json());
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    if (req.path.startsWith('/auth/')) {
+      const key = req.ip || req.socket.remoteAddress || 'unknown';
+      const now = Date.now();
+      let bucket = requestBuckets.get(key);
+      if (!bucket || bucket.resetAt <= now) bucket = { count: 0, resetAt: now + 60_000 };
+      bucket.count += 1;
+      requestBuckets.set(key, bucket);
+      if (bucket.count > 30) return res.status(429).json({ error: 'Too many authentication requests. Try again shortly.' });
+    }
+    next();
+  });
+  app.use(express.json({ limit: '100kb' }));
 
   const getClientId = () => process.env.DISCORD_CLIENT_ID || config.ID || '';
   const getClientSecret = () => process.env.DISCORD_CLIENT_SECRET || '';
@@ -112,7 +137,9 @@ export function createDashboardServer(bot: DashboardBot | null = null): Express 
       return res.status(503).send('Discord OAuth is not configured. Set ID (or DISCORD_CLIENT_ID) and DISCORD_CLIENT_SECRET in .env.');
     }
     const state = crypto.randomBytes(24).toString('hex');
+    const securePart = isSecureRequest(req) ? '; Secure' : '';
     oauthStates.set(state, Date.now() + 10 * 60 * 1000);
+    res.setHeader('Set-Cookie', `${OAUTH_STATE_COOKIE}=${state}; Path=/auth/callback; HttpOnly; SameSite=Lax; Max-Age=600${securePart}`);
     const params = new URLSearchParams({ client_id: clientId, response_type: 'code', redirect_uri: redirectUri(req), scope: 'identify guilds', state });
     return res.redirect(`https://discord.com/oauth2/authorize?${params.toString()}`);
   });
@@ -121,9 +148,16 @@ export function createDashboardServer(bot: DashboardBot | null = null): Express 
     const { code, state, error } = req.query;
     if (error) return res.redirect('/?oauth_error=cancelled');
     if (typeof code !== 'string' || typeof state !== 'string') return res.status(400).send('Missing OAuth code or state.');
+    const browserState = parseCookies(req)[OAUTH_STATE_COOKIE];
     const expiresAt = oauthStates.get(state);
     oauthStates.delete(state);
-    if (!expiresAt || expiresAt <= Date.now()) return res.status(400).send('The OAuth session expired. Please try signing in again.');
+    const securePart = isSecureRequest(req) ? '; Secure' : '';
+    res.setHeader('Set-Cookie', `${OAUTH_STATE_COOKIE}=; Path=/auth/callback; HttpOnly; SameSite=Lax; Max-Age=0${securePart}`);
+    if (!browserState || browserState.length !== state.length ||
+        !crypto.timingSafeEqual(Buffer.from(browserState), Buffer.from(state)) ||
+        !expiresAt || expiresAt <= Date.now()) {
+      return res.status(400).send('The OAuth session expired or could not be verified. Please try signing in again.');
+    }
 
     try {
       const token = await discordRequest(`${DISCORD_API}/oauth2/token`, {

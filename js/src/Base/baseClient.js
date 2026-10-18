@@ -111,11 +111,6 @@ class BaseNexus extends Client {
     return this.db.table(name);
   }
 
-  Checker() {
-    setTimeout(() => {
-      UpdateChecker.checkVersion();
-    }, 1000);
-  }
 
   async start(token) {
     await this.pluginManager.loadAll();

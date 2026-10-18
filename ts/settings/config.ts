@@ -7,14 +7,14 @@ const config: BotConfig = {
   TOKEN: process.env.TOKEN || 'BOT_TOKEN',
   PREFIX: process.env.PREFIX || 'BOT_PREFIX',
   ID: process.env.ID || 'CLIENT_ID',
-  REMEMBER_ENCRYPTION_KEY: process.env.REMEMBER_ENCRYPTION_KEY || 'your_encryption_key_here',
+  REMEMBER_ENCRYPTION_KEY: process.env.REMEMBER_ENCRYPTION_KEY || '',
   NODE_ENV: process.env.NODE_ENV || 'development',
   LOGTAIL_ENABLE: process.env.LOGTAIL_ENABLE === 'true',
   LOGTAIL_SOURCE_TOKEN: process.env.LOGTAIL_SOURCE_TOKEN || '',
   LOGTAIL_INGESTION_HOST: process.env.LOGTAIL_INGESTION_HOST || '',
-  Owners: ['OWNER_ID', 'OWNER_ID2', 'OWNER_ID3'],
-  Dev: '```[Boda3350]```(https://discord.com/users/1139143053387509840)',
-  DevTeam: '```[Nexus Studio Team]```(https://discord.gg/9cfgTktxHm)',
+  Owners: (process.env.OWNER_IDS || '').split(',').map(id => id.trim()).filter(id => /^\d{17,20}$/.test(id)),
+  Dev: process.env.DEVELOPER_URL ? `[Bot Developer](${process.env.DEVELOPER_URL})` : 'Bot Developer',
+  DevTeam: process.env.SUPPORT_SERVER_URL ? `[Development Team](${process.env.SUPPORT_SERVER_URL})` : 'Development Team',
   embed: {
     color: '#9f4015',
     successcolor: '#28a745',
@@ -32,10 +32,10 @@ const config: BotConfig = {
     bot: '🤖',
   },
   links: {
-    store: 'https://nexshop.qzz.io/',
+    store: process.env.STORE_URL || '',
     inviteURL: 'https://discord.com/api/oauth2/authorize?client_id=BOTID&permissions=6508997968&scope=bot%20applications.commands',
-    DiscordServer: 'https://discord.gg/9cfgTktxHm',
-    Devloper: 'https://discord.com/users/1139143053387509840',
+    DiscordServer: process.env.SUPPORT_SERVER_URL || '',
+    Devloper: process.env.DEVELOPER_URL || '',
   },
   options: {
     embedFooter: true,
@@ -44,7 +44,7 @@ const config: BotConfig = {
   },
   slash: {
     global: true,
-    guildIDS: ['1344065394368839701'],
+    guildIDS: (process.env.SLASH_GUILD_IDS || '').split(',').map(id => id.trim()).filter(id => /^\d{17,20}$/.test(id)),
   },
 };
 

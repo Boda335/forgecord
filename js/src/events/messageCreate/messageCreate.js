@@ -27,7 +27,7 @@ module.exports = {
           })
           .setThumbnail(message.guild.iconURL({ dynamic: true }))
           .setColor(client.config.embed.color)
-          .setDescription(`**My prefix for \`${message.guild.name}\` is \`${prefix}\`**\n**You can join our [Support Server](${client.config.links.DiscordServer}) for more help!**\n**This Bot is made by [\`Boda3350\`](${client.config.links.Devloper}) [\`neXus-Team\`](${client.config.links.DiscordServer})**`);
+          .setDescription(`**My prefix for \`${message.guild.name}\` is \`${prefix}\`**\n**You can join our [Support Server](${client.config.links.DiscordServer}) for more help!**\n**This bot is powered by Forgecord**`);
         let row = new ActionRowBuilder().addComponents(new ButtonBuilder().setURL(client.config.links.DiscordServer).setLabel('Support Server').setStyle(ButtonStyle.Link), new ButtonBuilder().setURL(client.config.links.Devloper).setLabel('Developer').setStyle(ButtonStyle.Link));
         return message.reply({ embeds: [embed], components: [row] });
       }

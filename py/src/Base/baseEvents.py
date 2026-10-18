@@ -18,3 +18,4 @@ class EventData:
     name: str
     execute: ExecuteFn
     once: bool = False
+    target: str = "client"
