@@ -19,11 +19,13 @@ jobs:
         working-directory: js
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: npm
           cache-dependency-path: js/package-lock.json
+
       - run: npm ci
       - run: npm test
 
@@ -34,10 +36,14 @@ jobs:
         working-directory: ts
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install
+          cache: npm
+          cache-dependency-path: ts/package-lock.json
+
+      - run: npm ci
       - run: npx tsc --noEmit
       - run: npm test
 
@@ -52,9 +58,11 @@ jobs:
         working-directory: py
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - run: pip install -r requirements-dev.txt
       - run: python -m pytest -q
 
@@ -63,23 +71,46 @@ jobs:
     needs: [js, ts, python]
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+
       - run: npm ci
+
       - name: Scaffold projects and verify optional flags
+        shell: bash
         run: |
+          set -e
+
+          echo "Scaffolding JavaScript project..."
           node bin/create-forgecord.js scaffold-test-js --yes --lang=js --no-install --dashboard --database=sqlite
+
           test -f scaffold-test-js/bot.js
           test -f scaffold-test-js/.env
           test -f scaffold-test-js/dashboard/package.json
-          node -e "const p=require('./scaffold-test-js/package.json'); if (!p.dependencies['good.db']) process.exit(1)"
-          cd scaffold-test-js && npm test
-          cd ..
+
+          node -e "const p = require('./scaffold-test-js/package.json'); if (!p.dependencies?.['good.db']) { console.error('good.db is missing from dependencies'); process.exit(1); }"
+
+          echo "Installing JavaScript scaffold dependencies..."
+          npm --prefix scaffold-test-js install
+
+          echo "Running JavaScript scaffold tests..."
+          npm --prefix scaffold-test-js test
+
+          echo "Scaffolding TypeScript project..."
           node bin/create-forgecord.js scaffold-test-ts --yes --lang=ts --no-install --dashboard --database=json
+
           test -f scaffold-test-ts/bot.ts
           test -f scaffold-test-ts/.env
+          test -f scaffold-test-ts/dashboard/package.json
+
+          echo "Scaffolding Python project..."
           node bin/create-forgecord.js scaffold-test-py --yes --lang=py --no-install --database=json
+
           test -f scaffold-test-py/bot.py
           test -f scaffold-test-py/.env
+
+          echo "All CLI smoke tests passed."
+
