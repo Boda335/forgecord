@@ -13,7 +13,7 @@ import { COMMANDS_DIR, PLUGINS_DIR, ROOT_DIR } from '../core/paths';
 import config from '../../settings/config';
 import frameworkSettings from '../../settings/framework';
 import type { BotConfig } from '../../settings/config';
-import type { ForgecordSettings } from '../../settings/framework';
+import type { ForgecordSettings } from '../types/framework';
 import type { CommandData } from '../types/command';
 import type { ComponentData } from '../types/component';
 import type { AnyFunction } from '../types/function';
