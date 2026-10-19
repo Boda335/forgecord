@@ -137,7 +137,7 @@ export function createDashboardServer(bot: DashboardBot | null = null): Express 
       return res.status(503).send('Discord OAuth is not configured. Set ID (or DISCORD_CLIENT_ID) and DISCORD_CLIENT_SECRET in .env.');
     }
     const state = crypto.randomBytes(24).toString('hex');
-    const securePart = isSecureRequest(req) ? '; Secure' : '';
+    const securePart = secureRequest(req) ? '; Secure' : '';
     oauthStates.set(state, Date.now() + 10 * 60 * 1000);
     res.setHeader('Set-Cookie', `${OAUTH_STATE_COOKIE}=${state}; Path=/auth/callback; HttpOnly; SameSite=Lax; Max-Age=600${securePart}`);
     const params = new URLSearchParams({ client_id: clientId, response_type: 'code', redirect_uri: redirectUri(req), scope: 'identify guilds', state });
@@ -148,10 +148,10 @@ export function createDashboardServer(bot: DashboardBot | null = null): Express 
     const { code, state, error } = req.query;
     if (error) return res.redirect('/?oauth_error=cancelled');
     if (typeof code !== 'string' || typeof state !== 'string') return res.status(400).send('Missing OAuth code or state.');
-    const browserState = parseCookies(req)[OAUTH_STATE_COOKIE];
+    const browserState = cookies(req)[OAUTH_STATE_COOKIE];
     const expiresAt = oauthStates.get(state);
     oauthStates.delete(state);
-    const securePart = isSecureRequest(req) ? '; Secure' : '';
+    const securePart = secureRequest(req) ? '; Secure' : '';
     res.setHeader('Set-Cookie', `${OAUTH_STATE_COOKIE}=; Path=/auth/callback; HttpOnly; SameSite=Lax; Max-Age=0${securePart}`);
     if (!browserState || browserState.length !== state.length ||
         !crypto.timingSafeEqual(Buffer.from(browserState), Buffer.from(state)) ||
