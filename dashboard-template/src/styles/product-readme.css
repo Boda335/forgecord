@@ -1,0 +1,122 @@
+@layer components {
+  .markdown-document-clip { scroll-behavior: smooth; }
+
+  .markdown-body {
+    padding: 1.25rem 1rem;
+    color: hsl(var(--card-foreground));
+    font-size: 0.925rem;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    text-align: start;
+  }
+
+  .markdown-body :where(h1, h2, h3, h4, h5, h6) {
+    color: hsl(var(--foreground));
+    font-family: var(--font-heading, inherit);
+    font-weight: 650;
+    letter-spacing: -0.025em;
+    line-height: 1.3;
+    margin-block: 1.75rem 0.75rem;
+    position: relative;
+  }
+
+  .markdown-body h1 {
+    border-block-end: 1px solid hsl(var(--border) / 0.75);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-block-start: 0;
+    padding-block-end: 0.75rem;
+  }
+
+  .markdown-body h2 {
+    border-block-end: 1px solid hsl(var(--border) / 0.65);
+    font-size: clamp(1.25rem, 3vw, 1.55rem);
+    padding-block-end: 0.45rem;
+  }
+
+  .markdown-body h3 { font-size: 1.15rem; }
+  .markdown-body h4 { font-size: 1.05rem; }
+  .markdown-body h5,
+  .markdown-body h6 { font-size: 0.95rem; }
+  .markdown-body :where(p, ul, ol, blockquote, pre, .markdown-table-scroll, details) { margin-block: 1rem; }
+  .markdown-body p { max-inline-size: 78ch; }
+  .markdown-body :where(ul, ol) { padding-inline-start: 1.5rem; }
+  .markdown-body ul { list-style: disc; }
+  .markdown-body ol { list-style: decimal; }
+  .markdown-body li { padding-inline-start: 0.25rem; }
+  .markdown-body li + li { margin-block-start: 0.35rem; }
+  .markdown-body li::marker { color: hsl(var(--muted-foreground)); }
+  .markdown-body a { color: hsl(var(--primary)); text-decoration: underline; text-decoration-color: hsl(var(--primary) / 0.4); text-underline-offset: 0.2em; }
+  .markdown-body a:hover { text-decoration-color: currentColor; }
+  .markdown-body a:focus-visible { border-radius: 0.15rem; outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+  .markdown-body :not(pre) > code { border: 1px solid hsl(var(--border) / 0.8); border-radius: 0.4rem; background: hsl(var(--muted) / 0.75); color: hsl(var(--foreground)); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.86em; padding: 0.12em 0.4em; }
+  .markdown-body pre { direction: ltr; max-inline-size: 100%; overflow-x: auto; border: 1px solid hsl(var(--border) / 0.8); border-radius: 0.8rem; background: hsl(var(--muted) / 0.65); color: hsl(var(--foreground)); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.84rem; line-height: 1.7; padding: 1rem; text-align: start; }
+  .markdown-body pre code { direction: ltr; font: inherit; }
+  .markdown-body blockquote { border-inline-start: 2px solid hsl(var(--primary) / 0.7); background: hsl(var(--muted) / 0.35); color: hsl(var(--muted-foreground)); padding-block: 0.15rem; padding-inline-start: 1rem; }
+  .markdown-body hr { border: 0; border-block-start: 1px solid hsl(var(--border) / 0.75); }
+  .markdown-body img { display: inline-block; max-inline-size: 100%; block-size: auto; vertical-align: middle; }
+  .markdown-body [align="center"] { text-align: center !important; }
+  .markdown-body [align="left"] { text-align: start !important; }
+  .markdown-body [align="right"] { text-align: end !important; }
+  .markdown-body :where(p, div, h1, h2, h3, h4, h5, h6)[align="center"] { margin-inline: auto; }
+  .markdown-body a[align="center"] { display: block; }
+  .markdown-body a[align="left"],
+  .markdown-body a[align="right"] { display: block; }
+  .markdown-body img[align="center"] { display: block; margin-inline: auto; }
+  .markdown-body img[align="left"] { float: inline-start; margin-inline-end: 0.75rem; }
+  .markdown-body img[align="right"] { float: inline-end; margin-inline-start: 0.75rem; }
+  .markdown-body p[align="center"] > img,
+  .markdown-body p[align="center"] > a > img { display: inline-block; }
+  .markdown-body .markdown-heading-anchor { margin-inline-start: 0.45em; color: hsl(var(--muted-foreground)); opacity: 0; text-decoration: none; }
+  .markdown-body :where(h1, h2, h3, h4, h5, h6):hover .markdown-heading-anchor,
+  .markdown-body .markdown-heading-anchor:focus-visible { opacity: 1; }
+
+  .markdown-table-scroll { max-inline-size: 100%; overflow-x: auto; border: 1px solid hsl(var(--border) / 0.75); border-radius: 0.75rem; }
+  .markdown-body table { inline-size: 100%; min-inline-size: 32rem; border-collapse: collapse; text-align: start; font-size: 0.875rem; }
+  .markdown-body table[align="center"] { margin-inline: auto; }
+  .markdown-body table[align="right"] { margin-inline-start: auto; margin-inline-end: 0; }
+  .markdown-body table[align="left"] { margin-inline-start: 0; margin-inline-end: auto; }
+  .markdown-body th { background: hsl(var(--muted) / 0.55); color: hsl(var(--foreground)); font-weight: 600; }
+  .markdown-body :where(th, td) { border-block-end: 1px solid hsl(var(--border) / 0.7); padding: 0.65rem 0.8rem; vertical-align: top; }
+  .markdown-body th[align],
+  .markdown-body td[align] { text-align: inherit; }
+  .markdown-body td { color: hsl(var(--muted-foreground)); }
+  .markdown-body details { border: 1px solid hsl(var(--border) / 0.7); border-radius: 0.75rem; padding: 0.8rem 1rem; }
+  .markdown-body summary { cursor: pointer; color: hsl(var(--foreground)); font-weight: 600; }
+  .markdown-body kbd { border: 1px solid hsl(var(--border)); border-radius: 0.35rem; background: hsl(var(--muted)); padding: 0.1em 0.4em; font: 0.82em var(--font-mono, ui-monospace, monospace); }
+  .markdown-body sub,
+  .markdown-body sup { line-height: 0; }
+  .markdown-body .task-list-item { list-style: none; }
+  .markdown-body .task-list-item input { margin-inline-end: 0.5rem; accent-color: hsl(var(--primary)); }
+  .markdown-body .footnotes { border-block-start: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); font-size: 0.85em; }
+  .markdown-body .markdown-alert { border: 1px solid hsl(var(--border)); border-inline-start: 3px solid hsl(var(--primary)); border-radius: 0.65rem; background: hsl(var(--muted) / 0.25); padding: 0.15rem 1rem; }
+  .markdown-body .markdown-alert-title { color: hsl(var(--foreground)); font-weight: 650; }
+  .markdown-body .markdown-alert-tip { border-inline-start-color: hsl(var(--success)); }
+  .markdown-body .markdown-alert-warning,
+  .markdown-body .markdown-alert-caution { border-inline-start-color: hsl(var(--warning)); }
+  .markdown-body .markdown-alert-important { border-inline-start-color: hsl(var(--accent)); }
+
+  .markdown-body .hljs-comment,
+  .markdown-body .hljs-quote { color: hsl(var(--muted-foreground)); font-style: italic; }
+  .markdown-body .hljs-keyword,
+  .markdown-body .hljs-selector-tag,
+  .markdown-body .hljs-literal { color: hsl(var(--primary)); }
+  .markdown-body .hljs-string,
+  .markdown-body .hljs-doctag,
+  .markdown-body .hljs-regexp { color: hsl(var(--success)); }
+  .markdown-body .hljs-number,
+  .markdown-body .hljs-variable,
+  .markdown-body .hljs-template-variable { color: hsl(var(--warning)); }
+  .markdown-body .hljs-title,
+  .markdown-body .hljs-section,
+  .markdown-body .hljs-built_in { color: hsl(var(--accent)); }
+  .markdown-body .hljs-meta,
+  .markdown-body .hljs-attr,
+  .markdown-body .hljs-attribute { color: hsl(var(--muted-foreground)); }
+
+  .markdown-text-content { margin: 0; padding: 1.5rem; color: hsl(var(--foreground)); font: 0.9rem/1.7 var(--font-mono, ui-monospace, monospace); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .markdown-image-alt { color: hsl(var(--muted-foreground)); font-style: italic; }
+  .markdown-document-fade { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 6rem; pointer-events: none; background: linear-gradient(to bottom, transparent, hsl(var(--card)) 88%); }
+
+  @media (min-width: 640px) { .markdown-body { padding: 1.75rem 1.5rem; } }
+  @media (prefers-reduced-motion: reduce) { .markdown-document-clip { scroll-behavior: auto; } }
+}

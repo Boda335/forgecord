@@ -1,0 +1,75 @@
+/* Intentional dark palette and surface hierarchy. */
+@layer base {
+.dark {
+    color-scheme: dark;
+
+    --background: 240 10% 7%;
+    --foreground: 0 0% 96%;
+
+    --surface: 240 9% 11%;
+    --surface-elevated: 240 9% 13%;
+    --surface-muted: 240 6% 16%;
+    --border-subtle: 240 5% 19%;
+    --glass-surface: 240 9% 15%;
+    --glass-highlight: 0 0% 100%;
+    --glass-highlight-alpha: 0.08;
+    --shadow-raised: 0 16px 42px hsl(240 30% 2% / 0.28);
+    --shadow-hover: 0 22px 52px hsl(240 30% 2% / 0.36);
+
+    --card: 240 9% 11%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 240 9% 12%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 38.36 89.06% 56.86%;
+    --primary-foreground: 240 10% 8%;
+
+    --secondary: 240 6% 17%;
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 240 6% 16%;
+    --muted-foreground: 240 5% 66%;
+
+    --accent: 38.36 89.06% 56.86%;
+    --accent-foreground: 240 10% 8%;
+
+    --border: 240 5% 23%;
+    --input: 240 7% 13%;
+    --ring: 38.36 89.06% 56.86%;
+
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 151 62% 52%;
+    --warning: 34 90% 62%;
+    --warning-foreground: 240 10% 10%;
+    --info: 205 76% 62%;
+
+    --glass-shadow:
+      0 24px 72px hsl(240 30% 2% / 0.35);
+
+    --gradient-dark:
+      linear-gradient(
+        145deg,
+        hsl(240 10% 8%),
+        rgb(14, 14, 17) 62%,
+        hsl(240 12% 8%)
+      );
+
+    --gradient-card:
+      linear-gradient(
+        145deg,
+        hsl(240 8% 14%),
+        hsl(240 9% 10%)
+      );
+
+    --sidebar-background: 240 9% 10%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: 240 10% 8%;
+    --sidebar-accent: 240 6% 17%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 240 5% 23%;
+    --sidebar-ring: var(--ring);
+  }
+}

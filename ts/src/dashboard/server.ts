@@ -167,9 +167,16 @@ export function createDashboardServer(bot: DashboardBot | null = null): Express 
       });
       const auth = { Authorization: `Bearer ${token.access_token}` };
       const [user, guilds] = await Promise.all([discordRequest(`${DISCORD_API}/users/@me`, { headers: auth }), discordRequest(`${DISCORD_API}/users/@me/guilds`, { headers: auth })]);
-      const normalizedGuilds: DiscordServer[] = Array.isArray(guilds) ? guilds.map((guild: any) => ({
-        id: String(guild.id), name: String(guild.name), icon: guild.icon ? String(guild.icon) : null, owner: Boolean(guild.owner), permissions: String(guild.permissions || '0'),
-      })).sort((a: DiscordServer, b: DiscordServer) => a.name.localeCompare(b.name)) : [];
+      const normalizedGuilds: DiscordServer[] = Array.isArray(guilds) ? guilds.map((guild: any) => {
+        const owner = Boolean(guild.owner);
+        const permissions = String(guild.permissions || '0');
+        const permissionBits = BigInt(permissions);
+        const canAddBot = owner || (permissionBits & 0x28n) !== 0n;
+        return {
+          id: String(guild.id), name: String(guild.name), icon: guild.icon ? String(guild.icon) : null,
+          owner, permissions, canAddBot,
+        };
+      }).filter((guild: any) => guild.canAddBot).sort((a: DiscordServer, b: DiscordServer) => a.name.localeCompare(b.name)) : [];
       const sessionId = crypto.randomBytes(32).toString('hex');
       sessions.set(sessionId, { user: { id: String(user.id), username: String(user.username || 'Discord User'), globalName: user.global_name ? String(user.global_name) : null, avatar: user.avatar ? String(user.avatar) : null }, guilds: normalizedGuilds, expiresAt: Date.now() + SESSION_TTL_SECONDS * 1000 });
       setSessionCookie(res, sessionId, secureRequest(req));

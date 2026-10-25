@@ -1,0 +1,73 @@
+/* Global document defaults, normalization, focus, and accessibility behavior. */
+:root {
+  --app-navbar-offset: 5rem;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    @apply border-border;
+  }
+
+  html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+    background: hsl(var(--background));
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0;
+    background: var(--gradient-dark);
+  }
+
+  ::selection {
+    color: hsl(var(--foreground));
+    background: hsl(var(--primary) / 0.22);
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  button,
+  a,
+  [role='button'],
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+}
+
+.api-docs-main :is(section[id], article[id]) {
+  scroll-margin-block-start: calc(var(--app-navbar-offset, 5rem) + 1rem);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--secondary));
+  border-radius: 99px;
+  border: 2px solid hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.52);
+}

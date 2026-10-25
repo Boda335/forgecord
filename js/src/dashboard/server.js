@@ -48,7 +48,8 @@ function createDashboardServer(bot = null) {
     return false;
   }
 
-  const dashboardReady = ensureDashboardBuild();
+  const isDevelopment = config.NODE_ENV !== 'production';
+  const dashboardReady = isDevelopment ? false : ensureDashboardBuild();
   const oauthStates = new Map();
   const requestBuckets = new Map();
   const OAUTH_STATE_COOKIE = 'forgecord_oauth_state';
@@ -198,13 +199,20 @@ function createDashboardServer(bot = null) {
         discordRequest(`${DISCORD_API}/users/@me/guilds`, { headers: { Authorization: `Bearer ${token.access_token}` } }),
       ]);
 
-      const normalizedGuilds = Array.isArray(guilds) ? guilds.map(guild => ({
-        id: String(guild.id),
-        name: String(guild.name),
-        icon: guild.icon || null,
-        owner: Boolean(guild.owner),
-        permissions: String(guild.permissions || '0'),
-      })).sort((a, b) => a.name.localeCompare(b.name)) : [];
+      const normalizedGuilds = Array.isArray(guilds) ? guilds.map(guild => {
+        const owner = Boolean(guild.owner);
+        const permissions = String(guild.permissions || '0');
+        const permissionBits = BigInt(permissions);
+        const canAddBot = owner || (permissionBits & 0x28n) !== 0n;
+        return {
+          id: String(guild.id),
+          name: String(guild.name),
+          icon: guild.icon || null,
+          owner,
+          permissions,
+          canAddBot,
+        };
+      }).filter(guild => guild.canAddBot).sort((a, b) => a.name.localeCompare(b.name)) : [];
 
       const sessionId = crypto.randomBytes(32).toString('hex');
       sessions.set(sessionId, {
@@ -254,13 +262,13 @@ function createDashboardServer(bot = null) {
     dashboard: 'enabled',
   }));
 
-  if (config.options?.dashboardProduction !== false && dashboardReady) {
+  if (!isDevelopment && config.options?.dashboardProduction !== false && dashboardReady) {
     app.use(express.static(distRoot));
     app.use((req, res, next) => {
       if (req.path.startsWith('/api/') || req.path.startsWith('/auth/')) return next();
       res.sendFile(path.join(distRoot, 'index.html'), error => error ? next(error) : undefined);
     });
-  } else if (config.options?.dashboardProduction !== false && !dashboardReady) {
+  } else if (!isDevelopment && config.options?.dashboardProduction !== false && !dashboardReady) {
     app.use((req, res, next) => {
       if (req.path.startsWith('/api/') || req.path.startsWith('/auth/')) return next();
       return res.status(503).send('Dashboard UI is not built. Run `npm run dashboard:build` or enable DASHBOARD_AUTO_BUILD=true in development.');

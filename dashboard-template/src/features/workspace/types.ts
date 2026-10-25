@@ -23,6 +23,7 @@ export interface DiscordServer {
   icon: string | null;
   owner: boolean;
   permissions: string;
+  canAddBot?: boolean;
 }
 
 export interface ApiErrorShape {

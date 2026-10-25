@@ -1,0 +1,131 @@
+@layer components {
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.32s var(--ease-premium) both;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.24s ease-out both;
+  }
+
+  .terminal-text {
+    @apply font-mono text-primary;
+  }
+
+  .typing-cursor {
+    @apply inline-block w-2 h-5 bg-primary ms-1;
+
+    animation: blink 1s step-end infinite;
+  }
+
+  .scanline {
+    background:
+      linear-gradient(
+        transparent 50%,
+        hsl(var(--primary) / 0.014) 50%
+      );
+    background-size: 100% 4px;
+    pointer-events: none;
+  }
+
+  .glow-border {
+    box-shadow:
+      var(--glow-primary),
+      inset 0 1px 0 hsl(var(--primary) / 0.1);
+  }
+}
+
+input:not([type='checkbox']):not([type='radio']),
+textarea,
+select {
+  border-radius: 0.75rem;
+  background-color: hsl(var(--input) / 0.92);
+  border-color: hsl(var(--border) / 0.88);
+}
+
+input:not([type='checkbox']):not([type='radio']):focus,
+textarea:focus,
+select:focus {
+  border-color: hsl(var(--ring) / 0.86);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.14);
+  outline: none;
+}
+
+/* =========================================================
+   Images / Buttons
+   ========================================================= */
+
+img {
+  max-width: 100%;
+}
+
+button,
+a,
+[role='button'] {
+  touch-action: manipulation;
+}
+
+/* =========================================================
+   Popovers / Lists
+   ========================================================= */
+
+[role='listbox'],
+[data-radix-popper-content-wrapper] > div[data-side] {
+  background: hsl(var(--popover) / 0.97);
+  border-color: hsl(var(--border) / 0.84);
+  box-shadow:
+    0 20px 54px hsl(240 25% 5% / 0.2),
+    inset 0 1px 0 hsl(var(--foreground) / 0.06);
+  backdrop-filter: blur(18px) saturate(115%);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+}
+
+/* =========================================================
+   Tables
+   ========================================================= */
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead th {
+  color: hsl(var(--muted-foreground));
+  font:
+    600 0.68rem/1.2 'Geist Variable',
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+tbody tr {
+  transition: background-color 150ms ease;
+}
+
+tbody tr:hover {
+  background: hsl(var(--foreground) / 0.025);
+}
+
+::placeholder {
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+@supports not (
+  (backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))
+) {
+  .glass {
+    background: hsl(var(--card) / 0.96);
+  }
+
+  .glass-strong {
+    background: hsl(var(--card) / 0.985);
+  }
+}

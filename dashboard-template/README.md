@@ -1,20 +1,21 @@
 # Forgecord Dashboard
 
-A redesigned Forgecord Discord dashboard focused on a premium dark control-center experience.
+This folder uses the reusable UI components, styles, theme tokens, fonts, and shared utilities from the Nexus Shop client. Forgecord's Discord OAuth and server-management flow remain in place. The primary brand color is fixed to `#f3ac2f` in both light and dark modes.
 
-## Structure
+Workspace pages live in `src/features/workspace`. Shared UI primitives live in `src/components/ui`; routing is implemented in `src/App.tsx`.
 
-- `src/components/layout/` — application shell and navigation
-- `src/components/ui/` — reusable dashboard components
-- `src/pages/` — route-level screens
-- `src/lib/` — API client
-- `src/design-system/` — design decisions and tokens
-
-## Run
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-The existing API contracts and `/api` + `/auth` proxy paths are preserved.
+Vite runs on `http://localhost:8080`. Requests to `/api` and `/auth` are proxied to `http://localhost:3000` by default. Set `FORGECORD_API_PROXY` to override the backend URL.
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```

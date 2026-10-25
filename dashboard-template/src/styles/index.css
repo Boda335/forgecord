@@ -1,0 +1,14 @@
+/* Tailwind v4 entry point; keep framework generation before semantic layers. */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./theme.css";
+@import "./light.css";
+@import "./dark.css";
+@import "./colors.css";
+@import "./globals.css";
+@import "./typography.css";
+@import "./animations.css";
+@import "./utilities.css";
+@import "./product-readme.css";
+@import "./components.css";
+@import "./rtl.css";

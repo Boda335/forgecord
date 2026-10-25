@@ -163,13 +163,20 @@ function createDashboardServer(bot = null) {
         discordRequest(`${DISCORD_API}/users/@me/guilds`, { headers: { Authorization: `Bearer ${token.access_token}` } }),
       ]);
 
-      const normalizedGuilds = Array.isArray(guilds) ? guilds.map(guild => ({
-        id: String(guild.id),
-        name: String(guild.name),
-        icon: guild.icon || null,
-        owner: Boolean(guild.owner),
-        permissions: String(guild.permissions || '0'),
-      })).sort((a, b) => a.name.localeCompare(b.name)) : [];
+      const normalizedGuilds = Array.isArray(guilds) ? guilds.map(guild => {
+        const owner = Boolean(guild.owner);
+        const permissions = String(guild.permissions || '0');
+        const permissionBits = BigInt(permissions);
+        const canAddBot = owner || (permissionBits & 0x28n) !== 0n;
+        return {
+          id: String(guild.id),
+          name: String(guild.name),
+          icon: guild.icon || null,
+          owner,
+          permissions,
+          canAddBot,
+        };
+      }).filter(guild => guild.canAddBot).sort((a, b) => a.name.localeCompare(b.name)) : [];
 
       const sessionId = crypto.randomBytes(32).toString('hex');
       sessions.set(sessionId, {

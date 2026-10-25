@@ -61,14 +61,7 @@ const DATABASE_TYPES = {
 
 const { commandTemplate, eventTemplate, componentTemplate, pluginTemplate, safeIdentifier, slug, runAddGenerator, runDoctor } = require('./lib/generators');
 
-const BANNER_LINES = [
-  ' ______ ____  _____   _____ ______ _____ ____  _____  _____  ',
-  '|  ____/ __ \\|  __ \\ / ____|  ____/ ____/ __ \\|  __ \\|  __ \\ ',
-  '| |__ | |  | | |__) | |  __| |__ | |   | |  | | |__) | |  | |',
-  '|  __|| |  | |  _  /| | |_ |  __|| |   | |  | |  _  /| |  | |',
-  '| |   | |__| | | \\ \\| |__| | |___| |___| |__| | | \\ \\| |__| |',
-  '|_|    \\____/|_|  \\_\\\\_____|______\\_____\\____/|_|  \\_\\_____/ ',
-];
+const BANNER_LINES = [' ______ ____  _____   _____ ______ _____ ____  _____  _____  ', '|  ____/ __ \\|  __ \\ / ____|  ____/ ____/ __ \\|  __ \\|  __ \\ ', '| |__ | |  | | |__) | |  __| |__ | |   | |  | | |__) | |  | |', '|  __|| |  | |  _  /| | |_ |  __|| |   | |  | |  _  /| |  | |', '| |   | |__| | | \\ \\| |__| | |___| |___| |__| | | \\ \\| |__| |', '|_|    \\____/|_|  \\_\\\\_____|______\\_____\\____/|_|  \\_\\_____/ '];
 
 const BRAND_GRADIENT = ['#5ee7df', '#7aa2ff', '#b490f0'];
 const BRAND_PRIMARY = '#7aa2ff';
@@ -264,7 +257,7 @@ TOKEN=${answers.token || ''}
 PREFIX=${answers.prefix || '!'}
 
 # Client ID of your bot (found in Discord Developer Portal)
-ID=CLIENT_ID
+ID=${answers.clientId || 'CLIENT_ID'}
 
 # Comma-separated Discord user IDs allowed to use owner-only commands
 OWNER_IDS=
@@ -298,34 +291,34 @@ DASHBOARD_ENABLED=${answers.wantsDashboard ? 'true' : 'false'}
 DASHBOARD_PORT=3000
 DASHBOARD_HOST=0.0.0.0
 DASHBOARD_URL=
-DASHBOARD_REDIRECT_URI=
+DASHBOARD_REDIRECT_URI=${answers.wantsDashboard ? 'http://localhost:8080/auth/callback' : ''}
 DASHBOARD_COOKIE_SECURE=false
 DISCORD_CLIENT_SECRET=
-DASHBOARD_AUTO_BUILD=true
+DASHBOARD_AUTO_BUILD=${answers.wantsDashboard ? 'false' : 'true'}
 `;
 }
 
 function buildJsPackageJson({ dirName, isTs, wantsDashboard, mainFileName }) {
   const dependencies = {
-    'discord.js': '^14.21.0',
-    chalk: '^4.1.2',
-    'ascii-table': '^0.0.9',
-    boxen: '^5.1.2',
-    'gradient-string': '^2.0.2',
-    dotenv: '^16.6.1',
-    winston: '^3.17.0',
-    'winston-daily-rotate-file': '^5.0.0',
-    systeminformation: '^5.27.7',
-    '@logtail/winston': '^0.5.4',
-    '@logtail/node': '^0.5.4',
-    express: '^4.21.2',
-    ms: '^2.1.3',
-    concurrently: '^9.1.2',
-    'good.db': '^2.5.0',
+    'discord.js': 'latest',
+    chalk: 'latest',
+    'ascii-table': 'latest',
+    boxen: 'latest',
+    'gradient-string': 'latest',
+    dotenv: 'latest',
+    winston: 'latest',
+    'winston-daily-rotate-file': 'latest',
+    systeminformation: 'latest',
+    '@logtail/winston': 'latest',
+    '@logtail/node': 'latest',
+    express: 'latest',
+    ms: 'latest',
+    concurrently: 'latest',
+    'good.db': 'latest',
   };
 
   if (!isTs) {
-    dependencies['module-alias'] = '^2.2.3';
+    dependencies['module-alias'] = 'latest';
   }
 
   const compiledName = `${path.parse(mainFileName).name}.js`;
@@ -338,7 +331,8 @@ function buildJsPackageJson({ dirName, isTs, wantsDashboard, mainFileName }) {
     main: isTs ? `dist/${compiledName}` : mainFileName,
     scripts: isTs
       ? {
-          dev: `tsx watch ${mainFileName}`,
+          dev: 'concurrently -k "tsx watch ' + mainFileName + '" "npm run dashboard:dev"',
+          'bot:dev': `tsx watch ${mainFileName}`,
           build: 'tsc -p tsconfig.json',
           start: `node dist/${compiledName}`,
           test: 'vitest run',
@@ -367,26 +361,27 @@ function buildJsPackageJson({ dirName, isTs, wantsDashboard, mainFileName }) {
 
   if (isTs) {
     pkg.devDependencies = {
-      '@types/express': '^5.0.3',
-      '@types/ms': '^2.1.0',
-      typescript: '^5.8.3',
-      tsx: '^4.19.4',
-      '@types/node': '^22.15.30',
-      '@types/gradient-string': '^1.1.6',
-      vitest: '^2.1.9',
+      '@types/express': 'latest',
+      '@types/ms': 'latest',
+      typescript: 'latest',
+      tsx: 'latest',
+      '@types/node': 'latest',
+      '@types/gradient-string': 'latest',
+      vitest: 'latest',
     };
   } else {
     pkg.devDependencies = {
-      vitest: '^2.1.9',
+      vitest: 'latest',
     };
   }
 
   if (wantsDashboard) {
+    if (!isTs) pkg.scripts.dev = 'concurrently -k "npm start" "npm run dashboard:dev"';
     pkg.scripts = {
       ...pkg.scripts,
       'dashboard:dev': 'npm --prefix dashboard run dev',
       'dashboard:build': 'npm --prefix dashboard run build',
-      'dev:all': 'npm run dashboard:build && concurrently -k "' + (isTs ? 'npm run dev' : 'npm start') + '" "npm run dashboard:dev"',
+      'dev:all': 'concurrently -k "' + (isTs ? 'npm run bot:dev' : 'npm start') + '" "npm run dashboard:dev"',
     };
   }
 
@@ -504,7 +499,7 @@ function installDependencies(langChoice, targetDir, clack, wantsDashboard) {
 
     const pipBin = process.platform === 'win32' ? path.join('venv', 'Scripts', 'pip') : path.join('venv', 'bin', 'pip');
 
-    result = spawnSync(pipBin, ['install', '-r', 'requirements.txt'], {
+    result = spawnSync(pipBin, ['install', '--upgrade', '-r', 'requirements.txt'], {
       cwd: targetDir,
       stdio: 'pipe',
     });
@@ -890,8 +885,8 @@ async function main() {
   if (!flags.yes && !flags.entry) {
     const entryAnswer = await clack.text({
       message: 'Main file name',
-      placeholder: DEFAULT_MAIN_FILES[langKey],
-      initialValue: DEFAULT_MAIN_FILES[langKey],
+      placeholder: path.parse(DEFAULT_MAIN_FILES[langKey]).name,
+      initialValue: path.parse(DEFAULT_MAIN_FILES[langKey]).name,
 
       validate(value) {
         try {
@@ -942,6 +937,7 @@ async function main() {
 
   const answers = {
     token: '',
+    clientId: '',
     prefix: '',
     databaseType: selectedDatabaseType || 'JSON',
     wantsDashboard: flags.dashboard === true,
@@ -1011,6 +1007,22 @@ async function main() {
     }
 
     answers.token = token;
+
+    const clientId = await clack.text({
+      message: 'Discord Application / Client ID',
+      placeholder: 'Enter your Discord application ID',
+      validate(value) {
+        const trimmed = value.trim();
+        return trimmed && !/^\d{15,25}$/.test(trimmed) ? 'Enter a valid Discord application ID (numeric).' : undefined;
+      },
+    });
+
+    if (clack.isCancel(clientId)) {
+      clack.cancel('Cancelled — nothing was written.');
+      return;
+    }
+
+    answers.clientId = clientId.trim();
 
     const prefix = await clack.text({
       message: 'Command Prefix',

@@ -1,0 +1,13 @@
+/* lang/dir بيتضبطوا على <html> من ميتاداتا اللغة في src/i18n/config.ts؛ الـ CSS بيستخدم logical alignment وبيعكس العناصر الاتجاهية بس. */
+:dir(rtl) :is(
+  .rtl-mirror,
+  .lucide-arrow-right,
+  .lucide-arrow-left,
+  .lucide-chevron-right,
+  .lucide-chevron-left
+) { transform: scaleX(-1); }
+:dir(rtl) .animate-carousel-progress { transform-origin: right; }
+
+[dir='rtl'] input,
+[dir='rtl'] textarea,
+[dir='rtl'] select { text-align: start; }

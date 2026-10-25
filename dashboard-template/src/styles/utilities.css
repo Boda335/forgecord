@@ -1,0 +1,417 @@
+@layer utilities {
+  /* `primary` stays the chosen fill. These semantic foreground utilities use
+     the contrast-corrected ink token, so existing components need no edits. */
+  [class~="text-primary"] {
+    color: hsl(var(--primary-ink)) !important;
+  }
+
+  [class~="text-primary/60"] { color: color-mix(in srgb, hsl(var(--primary-ink)) 60%, transparent) !important; }
+  [class~="text-primary/80"] { color: color-mix(in srgb, hsl(var(--primary-ink)) 80%, transparent) !important; }
+  [class~="text-primary/90"] { color: color-mix(in srgb, hsl(var(--primary-ink)) 90%, transparent) !important; }
+
+  [class~="border-primary"] {
+    border-color: hsl(var(--primary-ink)) !important;
+  }
+
+  [class~="border-primary/10"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 10%, transparent) !important; }
+  [class~="border-primary/15"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 15%, transparent) !important; }
+  [class~="border-primary/20"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 20%, transparent) !important; }
+  [class~="border-primary/25"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 25%, transparent) !important; }
+  [class~="border-primary/28"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 28%, transparent) !important; }
+  [class~="border-primary/30"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 30%, transparent) !important; }
+  [class~="border-primary/35"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 35%, transparent) !important; }
+  [class~="border-primary/40"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 40%, transparent) !important; }
+  [class~="border-primary/45"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 45%, transparent) !important; }
+  [class~="border-primary/50"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 50%, transparent) !important; }
+  [class~="border-primary/55"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 55%, transparent) !important; }
+  [class~="border-primary/70"] { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 70%, transparent) !important; }
+
+  [class~="ring-primary"] {
+    --tw-ring-color: hsl(var(--primary-ink));
+  }
+  [class~="ring-primary/20"] { --tw-ring-color: color-mix(in srgb, hsl(var(--primary-ink)) 20%, transparent); }
+  [class~="ring-primary/25"] { --tw-ring-color: color-mix(in srgb, hsl(var(--primary-ink)) 25%, transparent); }
+  [class~="ring-primary/35"] { --tw-ring-color: color-mix(in srgb, hsl(var(--primary-ink)) 35%, transparent); }
+
+  [class~="hover:text-primary"]:hover,
+  [class~="focus:text-primary"]:focus {
+    color: hsl(var(--primary-ink)) !important;
+  }
+  [class~="hover:text-primary/80"]:hover {
+    color: color-mix(in srgb, hsl(var(--primary-ink)) 80%, transparent) !important;
+  }
+  [class~="group-hover/product:text-primary"]:is(:where(.group\/product):hover *) {
+    color: hsl(var(--primary-ink)) !important;
+  }
+
+  [class~="focus:border-primary"]:focus,
+  [class~="group-hover:border-primary"]:is(:where(.group):hover *) {
+    border-color: hsl(var(--primary-ink)) !important;
+  }
+  [class~="hover:border-primary/25"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 25%, transparent) !important; }
+  [class~="hover:border-primary/28"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 28%, transparent) !important; }
+  [class~="hover:border-primary/30"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 30%, transparent) !important; }
+  [class~="hover:border-primary/35"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 35%, transparent) !important; }
+  [class~="hover:border-primary/40"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 40%, transparent) !important; }
+  [class~="hover:border-primary/45"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 45%, transparent) !important; }
+  [class~="hover:border-primary/50"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 50%, transparent) !important; }
+  [class~="hover:border-primary/55"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 55%, transparent) !important; }
+  [class~="hover:border-primary/70"]:hover { border-color: color-mix(in srgb, hsl(var(--primary-ink)) 70%, transparent) !important; }
+  [class~="focus:ring-primary/20"]:focus { --tw-ring-color: color-mix(in srgb, hsl(var(--primary-ink)) 20%, transparent); }
+
+  [class~="bg-primary"] {
+    outline: var(--primary-outline-width, 0px) solid hsl(var(--border));
+    outline-offset: -1px;
+  }
+
+  .apexcharts-tooltip,
+  .apexcharts-xaxistooltip {
+    background: hsl(var(--popover)) !important;
+    border-color: hsl(var(--border)) !important;
+    color: hsl(var(--popover-foreground)) !important;
+  }
+
+  .apexcharts-tooltip-title {
+    background: hsl(var(--muted)) !important;
+    border-bottom-color: hsl(var(--border)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .apexcharts-tooltip-text-y-label,
+  .apexcharts-xaxistooltip-text {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  .apexcharts-tooltip-text-y-value {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .font-display {
+    font-family: 'Manrope Variable', sans-serif;
+  }
+
+  .font-data {
+    font-family: 'Geist Variable', sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .glass {
+    background:
+      linear-gradient(
+        145deg,
+        hsl(var(--glass-surface) / 0.82),
+        hsl(var(--glass-surface) / 0.7)
+      );
+    border: 1px solid hsl(var(--foreground) / 0.1);
+    backdrop-filter: blur(18px) saturate(115%);
+    -webkit-backdrop-filter: blur(18px) saturate(115%);
+    box-shadow:
+      inset 0 1px 0 hsl(var(--glass-highlight) / var(--glass-highlight-alpha)),
+      var(--shadow-raised);
+  }
+
+  .glass-strong {
+    background:
+      linear-gradient(
+        145deg,
+        hsl(var(--glass-surface) / 0.96),
+        hsl(var(--glass-surface) / 0.88)
+      );
+    border: 1px solid hsl(var(--foreground) / 0.12);
+    backdrop-filter: blur(22px) saturate(120%);
+    -webkit-backdrop-filter: blur(22px) saturate(120%);
+    box-shadow:
+      inset 0 1px 0 hsl(var(--glass-highlight) / var(--glass-highlight-alpha)),
+      var(--glass-shadow);
+  }
+
+  .surface-raised {
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border) / 0.78);
+    box-shadow:
+      var(--shadow-raised),
+      inset 0 1px 0 hsl(var(--foreground) / 0.04);
+  }
+
+  .glass-glow {
+    box-shadow:
+      var(--glass-shadow),
+      inset 0 1px 0 hsl(var(--foreground) / 0.08);
+  }
+
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+
+  .glow-accent {
+    box-shadow: var(--glow-accent);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-text {
+    background:
+      linear-gradient(
+        112deg,
+        hsl(var(--foreground)),
+        hsl(var(--primary)) 74%
+      );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .eyebrow {
+    font:
+      600 0.7rem/1.2 'Geist Variable',
+      sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: hsl(var(--accent));
+  }
+
+  .card-glow {
+    position: relative;
+    transition:
+      transform 180ms var(--ease-premium),
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .card-glow:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--primary) / 0.34);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .ambient-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--gradient-dark);
+  }
+
+  .ambient-backdrop::before,
+  .ambient-backdrop::after {
+    content: '';
+    position: absolute;
+    width: min(54vw, 720px);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    filter: blur(118px);
+    pointer-events: none;
+  }
+
+  .ambient-backdrop::before {
+    top: -34rem;
+    inset-inline-end: -15rem;
+    background: hsl(var(--primary) / 0.1);
+  }
+
+  .ambient-backdrop::after {
+    bottom: -40rem;
+    inset-inline-start: -18rem;
+    background: hsl(var(--accent) / 0.06);
+  }
+
+  .ambient-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E");
+  }
+
+  .skeleton-shimmer {
+    background:
+      linear-gradient(
+        100deg,
+        hsl(var(--muted)) 20%,
+        hsl(var(--secondary)) 50%,
+        hsl(var(--muted)) 80%
+      );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+  }
+
+  .hero-stage {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .hero-stage::before {
+    content: '';
+    position: absolute;
+    width: 40rem;
+    height: 32rem;
+    z-index: -1;
+    inset-inline-end: -13rem;
+    top: -5rem;
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        ellipse,
+        hsl(var(--primary) / 0.12),
+        transparent 68%
+      );
+    filter: blur(22px);
+  }
+
+  .product-art-fallback {
+    background:
+      radial-gradient(
+        ellipse at 25% 20%,
+        hsl(var(--primary) / 0.24),
+        transparent 36%
+      ),
+      radial-gradient(
+        ellipse at 80% 80%,
+        hsl(var(--accent) / 0.15),
+        transparent 34%
+      ),
+      linear-gradient(
+        140deg,
+        hsl(240 8% 24%),
+        hsl(240 11% 12%)
+      );
+  }
+
+  .text-rotate {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .text-rotate-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .text-rotate-word {
+    display: inline-flex;
+    overflow: hidden;
+  }
+
+  .text-rotate-lines {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text-rotate-element {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  .text-rotate-space {
+    white-space: pre;
+  }
+
+  .shapegrid-canvas {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .rotating-text-theme {
+    background: var(--gradient-primary);
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.18);
+  }
+
+  .rotating-text-theme .text-rotate-element {
+    position: relative;
+    top: -2px;
+  }
+}
+
+.animate-carousel-progress {
+  transform-origin: left;
+  animation: carousel-progress 6500ms linear forwards;
+  will-change: transform;
+}
+
+/*
+ * الأعلام/الإيموجي.
+ * الستاك الافتراضي (Geist + sans-serif) بيودّي الإيموجي لخط الإيموجي بتاع
+ * النظام، وبعض الأنظمة (ويندوز مثلًا) خطها ما فيهوش الأعلام المركّبة من
+ * زوج Regional Indicators، فبيرسمها حروف لاتينية (US / EG) بدل العلم.
+ *
+ * فبنطلب خط إيموجي صريح الأول: أي نظام عنده خط بيدعم الأعلام ياخده،
+ * ومنعرضش حروف لاتينية مكان العلم.
+ */
+.flag-emoji {
+  font-family:
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Noto Color Emoji',
+    'Twemoji Mozilla',
+    'EmojiOne Color',
+    'Android Emoji',
+    sans-serif;
+  font-variant-emoji: emoji;
+  font-weight: 400;
+}
+
+
+.rtl-mirror {
+  transition: transform var(--duration-ui) ease;
+}
+
+[dir='rtl'] .rtl-mirror {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .animate-carousel-progress {
+  transform-origin: right;
+}
+
+.animate-startup-loading-bar {
+  width: 0%;
+  animation: startup-loading-bar 2000ms linear forwards;
+}
+
+.market-product-card {
+  container-type: inline-size;
+  container-name: market-product;
+}
+
+@container market-product (max-width: 300px) {
+  .market-product-content {
+    padding: 0.875rem;
+  }
+
+  .market-product-cta {
+    width: 2.75rem;
+    padding-inline: 0;
+  }
+
+  .market-product-cta-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+.bundle-contents-container {
+  container-type: inline-size;
+  container-name: bundle-contents;
+}
+
+@container bundle-contents (max-width: 560px) {
+  .bundle-products-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

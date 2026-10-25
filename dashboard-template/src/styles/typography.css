@@ -1,0 +1,33 @@
+/* Shared type hierarchy; page-specific utilities may refine the defaults. */
+@layer base {
+  html {
+    font-family: 'Geist Variable', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope Variable', sans-serif;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  h1 { font-size: clamp(2rem, 1.45rem + 2.6vw, 3.25rem); line-height: 1.08; font-weight: 650; }
+  h2 { font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem); line-height: 1.15; font-weight: 650; }
+  h3 { font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem); line-height: 1.25; font-weight: 600; }
+  h4 { font-size: 1.125rem; line-height: 1.35; font-weight: 600; }
+}
+
+@layer utilities {
+  .type-display { font-family: 'Manrope Variable', sans-serif; font-size: clamp(2.5rem, 1.6rem + 4vw, 5rem); line-height: 1.02; letter-spacing: -0.055em; font-weight: 600; }
+  .type-page-title { font-family: 'Manrope Variable', sans-serif; font-size: clamp(1.75rem, 1.35rem + 1.75vw, 2.75rem); line-height: 1.12; letter-spacing: -0.04em; font-weight: 650; }
+  .type-section-title { font-family: 'Manrope Variable', sans-serif; font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem); line-height: 1.25; font-weight: 600; }
+  .type-body { font-size: 1rem; line-height: 1.6; }
+  .type-body-sm { font-size: 0.875rem; line-height: 1.5; }
+  .type-label { font-size: 0.875rem; line-height: 1.4; font-weight: 550; }
+  .type-caption { font-size: 0.75rem; line-height: 1.4; }
+  .type-muted { color: hsl(var(--muted-foreground)); }
+  .type-data { font-variant-numeric: tabular-nums; }
+}

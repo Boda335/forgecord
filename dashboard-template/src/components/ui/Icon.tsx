@@ -2,7 +2,7 @@ import type { ReactNode, SVGProps } from 'react';
 
 export type IconName =
   | 'activity' | 'arrow' | 'bell' | 'check' | 'bot' | 'chevron' | 'command'
-  | 'dashboard' | 'external' | 'globe' | 'help' | 'logout' | 'menu'
+  | 'dashboard' | 'external' | 'globe' | 'help' | 'logo' | 'logout' | 'menu'
   | 'plus' | 'search' | 'server' | 'settings' | 'shield' | 'spark'
   | 'users' | 'x';
 
@@ -24,6 +24,7 @@ const paths: Record<IconName, ReactNode> = {
   external: <><path d="M14 5h5v5M19 5l-8 8" /><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></>,
   globe: <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.2 2.5 3.4 5.5 3.4 9s-1.2 6.5-3.4 9c-2.2-2.5-3.4-5.5-3.4-9S9.8 5.5 12 3Z" /></>,
   help: <><circle cx="12" cy="12" r="9" /><path d="M9.7 9a2.5 2.5 0 1 1 4.2 1.8c-.9.8-1.9 1.2-1.9 2.7M12 17h.01" /></>,
+  logo: <><path fill="#3fbd98" stroke="none" d="M9.07 0.08H22.8L19 3.92H8.85C5.72 4.43 3.39 5.75 1.28 8.25C1.38 4.16 4.91 0.56 9.07 0.08Z" /> <path fill="#dff0df" stroke="none" d="M10.1 6.04H16.7L12.33 10.41A5.07 5.07 0 1 0 12.44 19.47L15.24 22.27A8.93 8.93 0 1 1 10.1 6.04Z" /></>,
   logout: <><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10" /><path d="m14 8 4 4-4 4M18 12H8" /></>,
   menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
   plus: <><path d="M12 5v14M5 12h14" /></>,

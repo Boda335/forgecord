@@ -1,0 +1,9 @@
+/* Accent palettes shared by site surfaces and interactive states. */
+@layer base {
+  :root, [data-color-theme] { --primary: 38.36 89.06% 56.86%; --primary-foreground: 240 10% 8%; --accent: 38.36 89.06% 56.86%; --accent-foreground: 240 10% 8%; --ring: 38.36 89.06% 56.86%; --sidebar-primary: 38.36 89.06% 56.86%; --sidebar-primary-foreground: 240 10% 8%; --primary-hover: 38.36 89.06% 52%; --primary-active: 38.36 89.06% 47%; }
+  [data-color-theme="violet"] { --primary: 258 82% 68%; --accent: 258 82% 68%; --ring: 258 82% 68%; --sidebar-primary: 258 82% 68%; --primary-hover: 258 82% 62%; --primary-active: 258 82% 56%; }
+  [data-color-theme="ocean"] { --primary: 198 68% 52%; --accent: 198 68% 52%; --ring: 198 68% 52%; --sidebar-primary: 198 68% 52%; --primary-hover: 198 68% 46%; --primary-active: 198 68% 40%; }
+  [data-color-theme="emerald"] { --primary: 158 58% 43%; --accent: 158 58% 43%; --ring: 158 58% 43%; --sidebar-primary: 158 58% 43%; --primary-hover: 158 58% 37%; --primary-active: 158 58% 31%; }
+  [data-color-theme="rose"] { --primary: 345 78% 65%; --accent: 345 78% 65%; --ring: 345 78% 65%; --sidebar-primary: 345 78% 65%; --primary-hover: 345 78% 59%; --primary-active: 345 78% 53%; }
+  .dark { --primary-foreground: 240 10% 8%; --accent-foreground: 240 10% 8%; --sidebar-primary-foreground: 240 10% 8%; }
+}

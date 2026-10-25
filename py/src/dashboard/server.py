@@ -99,16 +99,28 @@ def create_dashboard_app(bot: Any = None) -> FastAPI:
                     if guild_response.status >= 400:
                         raise RuntimeError(guilds.get("message", "Discord guild request failed."))
 
-            normalized = sorted([
-                {
+            normalized = []
+            for guild in guilds:
+                if not isinstance(guild, dict) or not guild.get("id"):
+                    continue
+                owner = bool(guild.get("owner", False))
+                permissions = str(guild.get("permissions", "0"))
+                try:
+                    permission_bits = int(permissions)
+                except (TypeError, ValueError):
+                    permission_bits = 0
+                can_add_bot = owner or bool(permission_bits & 0x28)
+                if not can_add_bot:
+                    continue
+                normalized.append({
                     "id": str(guild["id"]),
                     "name": str(guild.get("name", "Unknown Server")),
                     "icon": guild.get("icon"),
-                    "owner": bool(guild.get("owner", False)),
-                    "permissions": str(guild.get("permissions", "0")),
-                }
-                for guild in guilds if isinstance(guild, dict) and guild.get("id")
-            ], key=lambda guild: guild["name"].lower())
+                    "owner": owner,
+                    "permissions": permissions,
+                    "canAddBot": can_add_bot,
+                })
+            normalized.sort(key=lambda guild: guild["name"].lower())
 
             session_id = secrets.token_hex(32)
             sessions[session_id] = {

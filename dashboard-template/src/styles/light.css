@@ -1,0 +1,106 @@
+/* Intentional light palette and surface hierarchy. */
+@layer base {
+:root {
+    color-scheme: light;
+
+    --background: 0 0% 100%;
+    --foreground: 240 10% 10%;
+
+    --surface: 0 0% 100%;
+    --surface-elevated: 0 0% 100%;
+    --surface-muted: 240 5% 97%;
+    --border-subtle: 240 6% 92%;
+    --glass-surface: 0 0% 100%;
+    --glass-highlight: 0 0% 100%;
+    --glass-highlight-alpha: 0.9;
+    --shadow-raised: 0 14px 40px hsl(240 20% 10% / 0.08);
+    --shadow-hover: 0 22px 52px hsl(240 20% 10% / 0.13);
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+
+    --primary: 38.36 89.06% 56.86%;
+    --primary-foreground: 240 10% 8%;
+
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 14%;
+
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 42%;
+
+    --accent: 38.36 89.06% 56.86%;
+    --accent-foreground: 240 10% 8%;
+
+    --destructive: 0 72% 44%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 151 65% 32%;
+    --warning: 32 92% 40%;
+    --warning-foreground: 240 10% 10%;
+    --info: 205 78% 38%;
+
+    --border: 240 6% 88%;
+    --input: 240 5% 96%;
+    --ring: 38.36 89.06% 56.86%;
+
+    --radius: 0.75rem;
+
+    --glass-shadow:
+      0 24px 72px hsl(240 20% 10% / 0.12);
+
+    --glow-primary:
+      0 0 32px hsl(var(--primary) / 0.14);
+
+    --glow-accent:
+      0 0 28px hsl(var(--accent) / 0.11);
+
+    --gradient-primary:
+      linear-gradient(
+        135deg,
+        hsl(var(--primary)),
+        hsl(var(--primary) / 0.82)
+      );
+
+    --gradient-dark:
+      linear-gradient(
+        145deg,
+        hsl(220 25% 98%),
+        hsl(220 24% 95%) 62%,
+        hsl(220 22% 97%)
+      );
+
+    --gradient-card:
+      linear-gradient(
+        145deg,
+        hsl(0 0% 100%),
+        hsl(220 25% 98%)
+      );
+
+    --terminal-green: 151 65% 32%;
+    --terminal-cyan: 190 75% 34%;
+    --terminal-yellow: 38 90% 38%;
+    --terminal-purple: 270 55% 44%;
+
+    --sidebar-background: 220 25% 98%;
+    --sidebar-foreground: 240 10% 10%;
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: 240 10% 8%;
+    --sidebar-accent: 240 5% 94%;
+    --sidebar-accent-foreground: 240 6% 14%;
+    --sidebar-border: 240 6% 88%;
+    --sidebar-ring: var(--ring);
+
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+
+    --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-ui: 180ms;
+  }
+}
