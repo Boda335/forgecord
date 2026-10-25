@@ -1,18 +1,20 @@
 name: Release
 
-# Publishes the root `forgecord` CLI package to npm whenever a GitHub
-# Release is published (Releases → Draft a new release → publish).
+# Publishes the `forgecord` CLI package to npm whenever a GitHub Release is
+# published (Releases -> Draft a new release -> Publish release).
 #
-# One-time setup required before this will work:
-#   1. Create an npm access token (npmjs.com → Access Tokens → Generate New
-#      Token → "Automation" type, so it bypasses 2FA prompts in CI).
-#   2. Add it as a repository secret named NPM_TOKEN
-#      (Settings → Secrets and variables → Actions → New repository secret).
-#   3. Bump "version" in package.json before tagging a release — npm publish
-#      refuses to re-publish an existing version.
+# Uses npm Trusted Publishing (OIDC): no NPM_TOKEN secret and no OTP needed.
 #
-# Until NPM_TOKEN is set, this workflow will simply fail at the publish step
-# — it does not run on every push, so it's safe to leave in place.
+# One-time setup on npmjs.com:
+#   forgecord package -> Settings -> Trusted Publisher -> GitHub Actions
+#     User/Organization : Boda335
+#     Repository        : forgecord
+#     Workflow filename : release.yml   (must match THIS file name exactly)
+#     Environment       : (leave empty - this job does not use one)
+#
+# Before every release:
+#   1. Bump "version" in package.json.
+#   2. Create a release whose tag is "v<version>" (e.g. v1.2.5).
 
 on:
   release:
@@ -23,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # enables npm provenance
+      id-token: write # required for npm trusted publishing + provenance
     steps:
       - uses: actions/checkout@v4
 
@@ -37,20 +39,27 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - name: Update npm
+        run: |
+          npm install -g npm@latest
+          npm -v
 
       - run: npm install --omit=dev
 
       - name: Verify package.json version matches the release tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           PKG_VERSION="v$(node -p "require('./package.json').version")"
-          if [ "$PKG_VERSION" != "${{ github.event.release.tag_name }}" ]; then
-            echo "package.json version ($PKG_VERSION) does not match the release tag (${{ github.event.release.tag_name }})."
+          if [ "$PKG_VERSION" != "$RELEASE_TAG" ]; then
+            echo "package.json version ($PKG_VERSION) does not match the release tag ($RELEASE_TAG)."
             echo "Bump \"version\" in package.json to match before publishing."
             exit 1
           fi
 
+      # No NODE_AUTH_TOKEN here: npm authenticates through GitHub's OIDC token.
       - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
