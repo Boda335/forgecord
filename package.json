@@ -1,6 +1,6 @@
 {
   "name": "forgecord",
-  "version": "1.2.0",
+  "version": "1.2.5",
   "description": "Scaffold a new Forgecord Discord bot in JavaScript, TypeScript, or Python",
   "bin": {
     "forgecord": "bin/create-forgecord.js"
@@ -31,7 +31,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Boda335/forgecord.git"
+    "url": "git+https://github.com/Boda335/forgecord.git"
   },
   "dependencies": {
     "@clack/prompts": "^1.8.1",

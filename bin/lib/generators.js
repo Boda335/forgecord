@@ -124,29 +124,74 @@ function pluginTemplate(lang, name) {
   if (lang === 'ts') return `import type { NexusClient } from '../types/client';\n\nconst plugin = {\n  name: ${JSON.stringify(name)},\n  async onLoad(client: NexusClient) {\n    // Register hooks or initialize integrations here.\n    // client.hooks.on('commandExecuted', payload => {});\n    client.logger.info('Plugin ${name} loaded');\n  },\n};\n\nexport default plugin;\n`;
   return `"""Forgecord plugin: ${name}."""\nfrom ..core.PluginManager import ForgecordPlugin\n\nasync def on_load(client) -> None:\n    # Register hooks or initialize integrations here.\n    client.logger.info("Plugin ${name} loaded")\n\nplugin = ForgecordPlugin(name=${quotePy(name)}, on_load=on_load)\n`;
 }
+function detectProjectLang(dir) {
+  if (fs.existsSync(path.join(dir, 'requirements.txt'))) return 'py';
+  if (fs.existsSync(path.join(dir, 'tsconfig.json'))) return 'ts';
+  return 'js';
+}
+
+/**
+ * Finds the bot entry file, including custom names chosen during setup
+ * (e.g. index.js, main.ts, app.py), not only the default bot.* names.
+ */
+function findEntryPoint(root) {
+  const exists = file => fs.existsSync(path.join(root, file));
+
+  const standard = ['bot.js', 'bot.ts', 'bot.py'].find(exists);
+  if (standard) return standard;
+
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+
+    const fromDev = String(pkg.scripts?.dev || '').match(/([\w./-]+\.ts)\b/)?.[1];
+    if (fromDev && exists(fromDev)) return fromDev;
+
+    const main = pkg.main;
+    if (main && exists(main)) return main;
+
+    if (main) {
+      const tsGuess = `${path.basename(main, path.extname(main))}.ts`;
+      if (exists(tsGuess)) return tsGuess;
+    }
+  } catch {
+    // no readable package.json — try Python next
+  }
+
+  try {
+    const dockerfile = fs.readFileSync(path.join(root, 'Dockerfile'), 'utf8');
+    const fromDocker = dockerfile.match(/([\w./-]+\.py)\b/)?.[1];
+    if (fromDocker && exists(fromDocker)) return fromDocker;
+  } catch {
+    // no Dockerfile
+  }
+
+  return null;
+}
+
 async function runAddGenerator(clack, kind, args, chalk) {
   const cwd = process.cwd();
   const languageArg = args.find(x => /^--lang=/.test(x));
   let lang = languageArg ? LANG_ALIASES[languageArg.slice(7).toLowerCase()] : null;
-  if (!lang) {
-    if (fs.existsSync(path.join(cwd, 'bot.js'))) lang = 'js';
-    else if (fs.existsSync(path.join(cwd, 'bot.ts'))) lang = 'ts';
-    else if (fs.existsSync(path.join(cwd, 'bot.py'))) lang = 'py';
+
+  if (languageArg && !lang) {
+    throw new Error(`Unsupported language "${languageArg.slice(7)}". Use js, ts, or py.`);
   }
+
+  // Inside an already generated project, the project itself is the source root.
+  const isGeneratedProject = fs.existsSync(path.join(cwd, 'src', 'Commands')) && (fs.existsSync(path.join(cwd, 'package.json')) || fs.existsSync(path.join(cwd, 'requirements.txt')));
+
+  if (!lang && isGeneratedProject) {
+    lang = detectProjectLang(cwd);
+  }
+
   if (!lang) {
     const choices = Object.entries(LANGUAGES).map(([value, info]) => ({ value, label: info.label }));
     lang = await clack.select({ message: 'Project language', options: choices, initialValue: 'js' });
     if (clack.isCancel(lang)) return clack.cancel('Cancelled.');
   }
-  const root = path.resolve(cwd, lang);
-  // If run inside an already generated project, use its own source root.
-  const isGeneratedProject = fs.existsSync(path.join(cwd, 'src', 'Commands')) && (fs.existsSync(path.join(cwd, 'package.json')) || fs.existsSync(path.join(cwd, 'requirements.txt')));
-  const actualRoot = isGeneratedProject ? cwd : root;
-  if (!languageArg && isGeneratedProject && !lang) {
-    if (fs.existsSync(path.join(cwd, 'requirements.txt'))) lang = 'py';
-    else if (fs.existsSync(path.join(cwd, 'tsconfig.json'))) lang = 'ts';
-    else lang = 'js';
-  }
+
+  // Otherwise (e.g. the template repository root) use the js/ts/py folder.
+  const actualRoot = isGeneratedProject ? cwd : path.resolve(cwd, lang);
   const ext = { js: '.js', ts: '.ts', py: '.py' }[lang];
   const name = safeIdentifier(await promptText(clack, `${kind} name`, kind === 'event' ? 'clientReady' : kind === 'command' ? 'ping' : kind === 'plugin' ? 'myPlugin' : 'myComponent'), `${kind} name`);
   let targetDir, filename, content;
@@ -202,7 +247,7 @@ async function runDoctor(clack, args) {
     checks.push(`${label}: project detected (${isJs ? 'Node.js' : 'Python'})`);
     const env = path.join(root, '.env');
     checks.push(`${label}: ${fs.existsSync(env) ? '.env exists (verify TOKEN manually)' : 'WARNING: .env is missing'}`);
-    const entry = ['bot.js', 'bot.ts', 'bot.py'].find(x => fs.existsSync(path.join(root, x)));
+    const entry = findEntryPoint(root);
     checks.push(`${label}: ${entry ? `entry point ${entry} found` : 'WARNING: no standard bot entry point found'}`);
     checks.push(`${label}: ${fs.existsSync(path.join(root, 'src', 'Commands')) ? 'commands directory found' : 'WARNING: src/Commands is missing'}`);
   }

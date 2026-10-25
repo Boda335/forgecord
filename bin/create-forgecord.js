@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 
 const fs = require('fs');
@@ -69,8 +70,22 @@ const BANNER_LINES = [
   '|_|    \\____/|_|  \\_\\\\_____|______\\_____\\____/|_|  \\_\\_____/ ',
 ];
 
+const BRAND_GRADIENT = ['#5ee7df', '#7aa2ff', '#b490f0'];
+const BRAND_PRIMARY = '#7aa2ff';
+const BRAND_ACCENT = '#5ee7df';
+
+function printLogo() {
+  const columns = process.stdout.columns || 80;
+
+  if (columns >= 64) {
+    console.log(forgecordGradient.multiline(BANNER_LINES.join('\n')));
+  } else {
+    console.log(chalk.bold.hex(BRAND_PRIMARY)('FORGECORD'));
+  }
+}
+
 function printBanner() {
-  console.log(forgecordGradient.multiline(BANNER_LINES.join('\n')));
+  printLogo();
   console.log(chalk.dim('  Scaffold a Discord bot in JavaScript, TypeScript, or Python.\n'));
 }
 
@@ -560,117 +575,231 @@ function printSummary(clack, langChoice, targetArg, installed, databaseType, wan
   clack.outro(chalk.green('Happy hacking! 🎉'));
 }
 
-function printHelp(isBareInvocation = false) {
-  const title = chalk.bold.cyan('Forgecord CLI');
+// --- terminal UI helpers ----------------------------------------------------
 
-  console.log(`\n${title}`);
+const ANSI_RE = /\u001B\[[0-9;]*m/g;
 
-  if (isBareInvocation) {
-    console.log(chalk.white('\nWelcome to Forgecord!'));
-    console.log(`Run ${chalk.cyan('forgecord --help')} or ${chalk.cyan('forgecord -h')} to see available commands.`);
-    console.log(`Run ${chalk.cyan('forgecord <project-name>')} to create a new bot.\n`);
-    return;
+function visibleLength(text) {
+  return String(text).replace(ANSI_RE, '').length;
+}
+
+/** Draws a rounded box around already-styled lines. */
+function boxed(lines, padding = 2) {
+  const inner = Math.max(...lines.map(visibleLength)) + padding * 2;
+  const edge = chalk.hex(BRAND_PRIMARY);
+  const pad = ' '.repeat(padding);
+
+  const out = [edge(`╭${'─'.repeat(inner)}╮`)];
+
+  for (const line of lines) {
+    out.push(`${edge('│')}${pad}${line}${' '.repeat(inner - padding - visibleLength(line))}${edge('│')}`);
   }
 
-  console.log(chalk.dim('Create and manage Discord bot projects in JavaScript, TypeScript, or Python.\n'));
+  out.push(edge(`╰${'─'.repeat(inner)}╯`));
 
-  console.log(chalk.bold('Usage'));
-  console.log('  forgecord [project-name] [options]');
-  console.log('  forgecord add <command|event|plugin|component> [--lang=js|ts|py]');
-  console.log('  forgecord doctor [--lang=js|ts|py]');
-  console.log('  forgecord --help | -h | -help\n');
+  return out.map(line => `  ${line}`).join('\n');
+}
 
-  console.log(chalk.bold('Commands'));
-  console.log('  add command       Generate a command handler');
-  console.log('  add event         Generate an event handler');
-  console.log('  add plugin        Generate a plugin');
-  console.log('  add component     Generate a component handler');
-  console.log('  doctor            Check a Forgecord project configuration\n');
+function section(title) {
+  return `\n  ${chalk.bold.hex(BRAND_ACCENT)(title)}`;
+}
 
-  console.log(chalk.bold('Project options'));
-  console.log('  --lang=<language>       js, ts, typescript, py, python');
-  console.log('  --database=<driver>     JSON, Sqlite, MONGODB, MySQL');
-  console.log('  --dashboard             Include the dashboard');
-  console.log('  --no-dashboard          Skip the dashboard');
-  console.log('  --entry=<filename>      Set the main entry filename');
-  console.log('  --yes, -y               Use defaults without prompts');
-  console.log('  --no-git                Do not initialize a Git repository');
-  console.log('  --no-install            Do not install dependencies\n');
+function row(command, description, width = 26) {
+  return `    ${chalk.hex(BRAND_PRIMARY)(command.padEnd(width))}${chalk.dim(description)}`;
+}
 
-  console.log(chalk.dim('Examples'));
-  console.log('  npx forgecord');
-  console.log('  npx forgecord my-bot --lang=js --database=JSON');
-  console.log('  forgecord add command --lang=ts');
-  console.log('  forgecord doctor');
-  console.log('  forgecord --help\n');
+function usageLine(text) {
+  return `    ${chalk.hex(BRAND_PRIMARY)(text)}`;
 }
 
 /**
- * Minimal colors for the help screens, so help works without loading
- * dependencies or requiring an interactive terminal.
+ * Short welcome screen shown when `forgecord` is run directly with no arguments.
  */
-function setupPlainChalk() {
-  const identity = value => value;
+function printWelcome() {
+  console.log();
+  printLogo();
+  console.log();
 
-  chalk = {
-    bold: Object.assign(identity, {
-      cyan: identity,
-    }),
-    cyan: identity,
-    white: identity,
-    dim: identity,
-    yellow: identity,
-    red: identity,
-    green: identity,
-  };
+  console.log(boxed([`${chalk.bold('Welcome to Forgecord!')} ${chalk.dim(`v${PROJECT_VERSION}`)}`, chalk.dim('Scaffold Discord bots in JavaScript, TypeScript, or Python.')]));
+
+  console.log(section('Get started'));
+  console.log(row('npx forgecord', 'Start the interactive setup'));
+  console.log(row('forgecord <project-name>', 'Create a new bot in ./<project-name>'));
+  console.log(row('forgecord init', 'Start the interactive setup'));
+
+  console.log(section('Inside a project'));
+  console.log(row('forgecord add <type>', 'command, event, plugin or component'));
+  console.log(row('forgecord doctor', 'Check your project configuration'));
+
+  console.log(section('Need help?'));
+  console.log(row('forgecord --help', 'Show every command and option'));
+
+  console.log(`\n  ${chalk.dim('Docs & source')}  ${chalk.hex(BRAND_ACCENT).underline('https://github.com/Boda335/forgecord')}\n`);
+}
+
+function printHelp(isBareInvocation = false) {
+  if (isBareInvocation) {
+    printWelcome();
+    return;
+  }
+
+  console.log();
+  console.log(`  ${chalk.bold.hex(BRAND_PRIMARY)('Forgecord CLI')} ${chalk.dim(`v${PROJECT_VERSION}`)}`);
+  console.log(chalk.dim('  Create and manage Discord bot projects in JavaScript, TypeScript, or Python.'));
+
+  console.log(section('Usage'));
+  console.log(usageLine('forgecord [project-name] [options]'));
+  console.log(usageLine('forgecord init'));
+  console.log(usageLine('forgecord add <command|event|plugin|component> [--lang=js|ts|py]'));
+  console.log(usageLine('forgecord doctor [--lang=js|ts|py]'));
+  console.log(usageLine('forgecord --help | -h | -help'));
+
+  console.log(section('Commands'));
+  console.log(row('init', 'Start the interactive project setup'));
+  console.log(row('add command', 'Generate a command handler'));
+  console.log(row('add event', 'Generate an event handler'));
+  console.log(row('add plugin', 'Generate a plugin'));
+  console.log(row('add component', 'Generate a component handler'));
+  console.log(row('doctor', 'Check a Forgecord project configuration'));
+
+  console.log(section('Project options'));
+  console.log(row('--lang=<language>', 'js, ts, typescript, py, python'));
+  console.log(row('--database=<driver>', 'JSON, Sqlite, MONGODB, MySQL'));
+  console.log(row('--dashboard', 'Include the dashboard'));
+  console.log(row('--no-dashboard', 'Skip the dashboard'));
+  console.log(row('--entry=<filename>', 'Set the main entry filename'));
+  console.log(row('--yes, -y', 'Use defaults without prompts'));
+  console.log(row('--no-git', 'Do not initialize a Git repository'));
+  console.log(row('--no-install', 'Do not install dependencies'));
+
+  console.log(section('Examples'));
+  console.log(row('npx forgecord', 'Interactive setup'));
+  console.log(row('npx forgecord my-bot --lang=js', 'Create "my-bot" in JavaScript'));
+  console.log(row('forgecord add command --lang=ts', 'Generate a TypeScript command'));
+  console.log(row('forgecord doctor', 'Check the current project'));
+  console.log();
+}
+
+/**
+ * Fallback "chalk" used if the real one cannot be loaded: every style
+ * (including hex()/bold/underline chains) just returns the text unchanged.
+ */
+function createPlainChalk() {
+  const identity = value => String(value);
+
+  const make = () =>
+    new Proxy(identity, {
+      get(target, prop) {
+        if (typeof prop === 'symbol') return target[prop];
+        if (prop === 'hex' || prop === 'bgHex' || prop === 'rgb' || prop === 'bgRgb') return () => make();
+        return make();
+      },
+    });
+
+  return make();
+}
+
+/**
+ * Loads chalk + gradient-string. Falls back to plain text if either fails,
+ * so the CLI never crashes just because of colors.
+ */
+async function loadUi() {
+  try {
+    const chalkModule = await import('chalk');
+    chalk = chalkModule.default || chalkModule;
+  } catch {
+    chalk = createPlainChalk();
+  }
+
+  try {
+    const gradientModule = await import('gradient-string');
+    gradient = gradientModule.default || gradientModule;
+    forgecordGradient = gradient(BRAND_GRADIENT);
+  } catch {
+    gradient = null;
+    forgecordGradient = { multiline: text => text };
+  }
+}
+
+// --- how was the CLI started? ----------------------------------------------
+
+// npx / pnpm dlx / yarn dlx / bunx all unpack the package into a temporary cache folder.
+const EPHEMERAL_RUNNER_RE = /[\\/](?:_npx|dlx|dlx-[^\\/]+|bunx-[^\\/]+)[\\/]/i;
+
+/**
+ * Returns a short reason string when the CLI was started through npx (or a
+ * similar "download and run" tool), or null when it was run directly
+ * (global install, `npm link`, `node bin/create-forgecord.js`, ...).
+ *
+ * Several signals are checked because older/newer npm versions and Windows
+ * shells don't all set the same environment variables.
+ */
+function detectEphemeralRunner() {
+  const env = process.env;
+
+  if (env.FORGECORD_FORCE_SETUP === '1') return 'FORGECORD_FORCE_SETUP=1';
+  if (env.npm_command === 'exec') return 'npm_command=exec';
+  if (env.npm_lifecycle_event === 'npx') return 'npm_lifecycle_event=npx';
+
+  const paths = [__filename, process.argv[1]].filter(Boolean);
+
+  try {
+    paths.push(fs.realpathSync(__filename));
+  } catch {
+    // ignore — the plain paths above are enough
+  }
+
+  if (paths.some(file => EPHEMERAL_RUNNER_RE.test(file))) return 'temporary runner cache path';
+
+  return null;
 }
 
 /**
  * CLI entry point.
  *
  * Behavior:
- * - `forgecord` with no arguments: show the welcome message.
- * - `npx forgecord` with no arguments: start the interactive project setup.
+ * - `forgecord` with no arguments (run directly): show the welcome screen.
+ * - `npx forgecord` or `forgecord init` with no arguments: start the interactive setup.
  * - Explicit help flags: show the full help page.
  * - Other arguments: run the corresponding command or generator.
  */
 async function main() {
-  const rawArgs = process.argv.slice(2);
-  const subcommand = rawArgs[0];
+  let rawArgs = process.argv.slice(2);
+
+  await loadUi();
 
   const helpFlags = new Set(['-h', '--help', '-help', 'help']);
 
-  const helpRequested = rawArgs.some(arg => helpFlags.has(arg));
-
   // Explicit help always displays the full help page.
-  if (helpRequested) {
-    setupPlainChalk();
+  if (rawArgs.some(arg => helpFlags.has(arg))) {
     printHelp(false);
     return;
   }
 
-  // For an interactive `npx forgecord` invocation, continue into setup.
-  // For a directly invoked executable named `forgecord` with no arguments,
-  // show the short welcome screen.
-  //
-  // npm_execpath is set by npm/npx, allowing us to distinguish the invocation.
-  const invokedThroughNpm = Boolean(process.env.npm_execpath) || Boolean(process.env.npm_command);
+  // `forgecord init` (alias: `create`) forces the interactive setup even when run directly.
+  let forceSetup = false;
 
-  if (rawArgs.length === 0 && !invokedThroughNpm) {
-    setupPlainChalk();
-    printHelp(true);
+  if (rawArgs[0] === 'init' || rawArgs[0] === 'create') {
+    forceSetup = true;
+    rawArgs = rawArgs.slice(1);
+  }
+
+  const runner = detectEphemeralRunner();
+
+  if (process.env.FORGECORD_DEBUG) {
+    console.log(chalk.dim(`[forgecord] runner=${runner || 'direct'} file=${__filename}`));
+  }
+
+  // `forgecord` (direct, no args) -> welcome screen.
+  // `npx forgecord` (no args)     -> interactive questions.
+  if (rawArgs.length === 0 && !runner && !forceSetup) {
+    printWelcome();
     return;
   }
 
-  const chalkModule = await import('chalk');
-  chalk = chalkModule.default || chalkModule;
+  const subcommand = rawArgs[0];
 
   const clack = await import('@clack/prompts');
-
-  const gradientModule = await import('gradient-string');
-  gradient = gradientModule.default || gradientModule;
-
-  forgecordGradient = gradient(['#4b6cb7', '#182848']);
 
   if (subcommand === 'add') {
     const kind = rawArgs[1];
